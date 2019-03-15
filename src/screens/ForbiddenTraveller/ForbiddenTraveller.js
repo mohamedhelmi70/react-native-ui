@@ -30,19 +30,21 @@ class IdentityScreen extends Component {
                }    
             };
         });
+    };
+
+    checkTravellerHandler = () => {
+        this.props.navigation.navigate('details');
     }
      
     render() {
        return (
             <View style={styles.container}>
                 
-                <View>
-                    <PickImage onImagePicked={this.pickImageHandler} />
-                </View>
-               
-                <View>                
-                    <CustomButton onPress={() => alert('Check Forbidden travelller')} bgColor="#f6b810"  size={20} >Check</CustomButton>
-                </View>
+              
+                <PickImage onImagePicked={this.pickImageHandler} />
+                    
+                <CustomButton onPress={this.checkTravellerHandler} bgColor="#f6b810"  size={20} >Check</CustomButton>
+            
 
             </View>
        );

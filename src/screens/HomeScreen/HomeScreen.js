@@ -7,7 +7,7 @@ import HeadingText from '../../components/UI/HeadingText/HeadingText';
 
 class HomeScreen extends Component {
   static navigationOptions = {
-    header: null,
+    title: 'Home',
   };
 
   startCriminalRecord = () => {
@@ -29,26 +29,26 @@ class HomeScreen extends Component {
         <View style={styles.viewflexStart}>
 
           <HeadingText 
-            size={40} 
-            moreStyle={{marginTop: 50, marginLeft: 10 ,fontWeight: 'bold'}} 
+            size={30} 
+            moreStyle={{marginTop: 20, marginLeft: 5}} 
             fontFamily='Fjalla-one'
           >
-            Welcome.,
+            Check Criminal Record & Identity By Your Fingerprints
           </HeadingText>
        
         </View>
 
-        <View style={styles.buttonContainer}>
+        <View style={styles.buttonsContainer}>
         
-          <CustomButton onPress={this.startCriminalRecord} bgColor="#f6b810" size={20} raduis={20}>
+          <CustomButton onPress={this.startCriminalRecord} moreStyle={{width: 300, height: 55}} bgColor="#f6b810" size={20} raduis={20}>
             Validate Criminal Record
           </CustomButton>
         
-          <CustomButton onPress={this.startIdentity} bgColor="#f6b810" size={20} raduis={20}>
+          <CustomButton onPress={this.startIdentity} moreStyle={{width: 300, height: 55}} bgColor="#f6b810" size={20} raduis={20}>
             Check Identity
           </CustomButton>
             
-          <CustomButton onPress={this.startForbiddenTraveller} bgColor="#f6b810" size={20} raduis={20} >
+          <CustomButton onPress={this.startForbiddenTraveller} moreStyle={{width: 300, height: 55}} bgColor="#f6b810" size={20} raduis={20} >
             Check Forbidden traveller
           </CustomButton>
         
@@ -62,15 +62,23 @@ class HomeScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#edf1f3',
+    backgroundColor: '#faf8fb',
     padding: 10
   },
   viewflexStart: {
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    paddingTop: 10,
+    paddingBottom: 15,
+    paddingLeft: 2
   },
-  buttonContainer: {
-    marginTop: 70,
-    alignItems: 'center'
+  buttonsContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 10
   }
 });
 

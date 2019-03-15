@@ -29,6 +29,13 @@ HomeStack.navigationOptions = {
       name={ Platform.OS === 'ios' ? 'ios-home' : 'md-home' }
     />
   ),
+  headerStyle: {
+    alignItems: 'center'
+  },
+  headerTitleStyle: {
+    fontFamily: 'Fjalla-one',
+    textAlignVertical: 'center'
+  }
 };
 
 const StatsStack = createStackNavigator({
@@ -43,6 +50,13 @@ StatsStack.navigationOptions = {
       name={Platform.OS === 'ios' ? 'md-stats' : 'md-stats'}
     />
   ),
+  headerStyle: {
+    alignItems: 'center'
+  },
+  headerTitleStyle: {
+    fontFamily: 'Fjalla-one',
+    textAlignVertical: 'center'
+  }
 };
 
 const IdentityStack = createStackNavigator({
@@ -57,14 +71,23 @@ IdentityStack.navigationOptions = {
       focused={focused}
       name={Platform.OS === 'ios' ? 'ios-search' : 'md-search'}
     />
-  ),
+  ), 
+  headerStyle: {
+    alignItems: 'center'
+  },
+  headerTitleStyle: {
+    fontFamily: 'Fjalla-one',
+    textAlignVertical: 'center'
+  }
 };
 
-const ProfileStack = createStackNavigator({
-  profile: ProfileScreen,
-  about: AboutScreen,
-  changePass: ChangePasswordScreen,
-});
+const ProfileStack = createStackNavigator(
+  {  
+    profile: ProfileScreen,
+    about: AboutScreen,
+    changePass: ChangePasswordScreen,
+  }
+);
 
 ProfileStack.navigationOptions = {
   tabBarLabel: 'Profile',
@@ -74,11 +97,20 @@ ProfileStack.navigationOptions = {
       name={Platform.OS === 'ios' ? 'ios-person' : 'md-person'}
     />
   ),
+  headerStyle: {
+    alignItems: 'center'
+  },
+  headerTitleStyle: {
+    fontFamily: 'Fjalla-one',
+    textAlignVertical: 'center'
+  }
 };
 
-export default createBottomTabNavigator({
-  HomeStack,
-  StatsStack,
-  IdentityStack,
-  ProfileStack
-});
+export default createBottomTabNavigator(
+  {
+    HomeStack,
+    StatsStack,
+    IdentityStack,
+    ProfileStack
+  }
+);

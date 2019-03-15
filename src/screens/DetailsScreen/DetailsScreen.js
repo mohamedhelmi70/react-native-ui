@@ -11,7 +11,7 @@ import Icon from '../../components/TabBarIcon/TabBarIcon';
 
 class DetailsScreen extends React.Component {
     static navigationOptions = {
-        header: null,
+        title: "Details",
     };
     
     state = {

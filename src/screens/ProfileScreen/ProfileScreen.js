@@ -103,7 +103,7 @@ class ProfileScreen extends React.Component {
               
                 <Icon name='md-log-out' size={17} focused={true} /> 
               
-                <Button size={17} marginL={15} onPress={this.signupHandler} >Logout</Button>
+                <Button size={17} marginL={15} onPress={this.signoutHandler} >Logout</Button>
               
               </View>
             

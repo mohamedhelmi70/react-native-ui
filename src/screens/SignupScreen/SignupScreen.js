@@ -35,7 +35,7 @@ class SignupScreen extends Component {
                 value: "",
                 valid: false,
                 validationRules: {
-                isEmail: true
+                    isEmail: true
                 },
                 touched: false
             },
@@ -43,7 +43,7 @@ class SignupScreen extends Component {
                 value: "",
                 valid: false,
                 validationRules: {
-                minLength: 6
+                    minLength: 6
                 },
                 touched: false
             },
@@ -58,7 +58,7 @@ class SignupScreen extends Component {
         }
     };
        
-    signUpHandler = () => {
+    signupHandler = () => {
         this.props.navigation.navigate('App');
     };
 
@@ -115,12 +115,11 @@ class SignupScreen extends Component {
 
     render (){
         return (
-            <View style={styles.Container}>
-                <KeyboardAvoidingView style={styles.container}>
-                   
+            <KeyboardAvoidingView style={styles.Container}  behavior="padding" enabled>
+                
                     <View style={styles.viewflexStart}>
                 
-                      <HeadingText size={35} fontFamily='Fjalla-one'>Check Criminal Record & Identity</HeadingText>
+                      <HeadingText size={35} fontFamily='Fjalla-one'>Fingerprint Makes Life Easier</HeadingText>
              
                     </View>
                     
@@ -133,9 +132,10 @@ class SignupScreen extends Component {
                             
                             <View style={styles.inputContainer}>
                                 <DefaultInput 
+                                    iconName='md-new'
                                     placeholder="Name"
                                     value={this.state.controls.name.value}
-                                    onChangeTextHandler={(val) => this.updateInputState('name', val)}
+                                    onChangeText={(val) => this.updateInputState('name', val)}
                                     valid={this.state.controls.name.valid}
                                     touched={this.state.controls.name.touch}
                                     autoCorrect={false}
@@ -146,14 +146,16 @@ class SignupScreen extends Component {
                         
                             <View style={styles.inputContainer}>
                                 <DefaultInput 
+                                   iconName='md-person'
                                     placeholder="Email"
                                     style={styles.input}
                                     value={this.state.controls.email.value}
-                                    onChangeText={val => this.updateInputState("email", val)}
+                                    onChangeText={(val) => this.updateInputState("email", val)}
                                     valid={this.state.controls.email.valid}
                                     touched={this.state.controls.email.touched}
                                     autoCapitalize='none'
                                     autoCorrect={false}
+                                    placeholderTextColor="#5a6e65"
                                     keyboardType="email-address"
                                     textContentType='emailAddress'
                                 />
@@ -161,6 +163,7 @@ class SignupScreen extends Component {
                             
                             <View style={styles.inputContainer}>
                                 <DefaultInput 
+                                    iconName='md-eye'
                                     placeholder="Password"
                                     style={styles.input}
                                     value={this.state.controls.password.value}
@@ -175,6 +178,7 @@ class SignupScreen extends Component {
                             </View>
                             <View style={styles.inputContainer}>
                                 <DefaultInput 
+                                    iconName='md-eye'
                                     placeholder="Confirm Password"
                                     style={styles.input}
                                     value={this.state.controls.confirmPassword.value}
@@ -215,8 +219,8 @@ class SignupScreen extends Component {
 
                     </TouchableWithoutFeedback>   
                                 
-                </KeyboardAvoidingView>
-          </View>
+            </KeyboardAvoidingView>
+
         );
     }
 }
@@ -232,7 +236,8 @@ const styles = StyleSheet.create({
        alignItems: 'center'
     },
     viewflexStart: {
-       alignItems: 'flex-start'
+       alignItems: 'flex-start',
+       marginBottom: 40
     },
     inputContainer: {
         width: "80%"

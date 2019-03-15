@@ -90,12 +90,12 @@ class SignInScreen extends React.Component {
     render() {
       return (
       
-      <KeyboardAvoidingView style={styles.Container}>
+      <KeyboardAvoidingView style={styles.Container} behavior="padding" enabled>
         
             
               <View style={styles.viewflexStart}>
                   
-                <HeadingText size={35} fontFamily='Fjalla-one'>Check Criminal Record & Identity</HeadingText>
+                <HeadingText size={35} fontFamily='Fjalla-one'>Fingerprint Makes Life Easier</HeadingText>
               
               </View>
                   
@@ -107,9 +107,10 @@ class SignInScreen extends React.Component {
                       
                     <View style={styles.inputContainer}>
                             <DefaultInput 
+                              iconName='md-person'
                               placeholder="Email"
                               value={this.state.controls.email.value}
-                              onChangeText={val => this.updateInputState("email", val)}
+                              onChangeText={(val) => this.updateInputState("email", val)}
                               valid={this.state.controls.email.valid}
                               touched={this.state.controls.email.touched}
                               autoCapitalize='none'
@@ -122,6 +123,7 @@ class SignInScreen extends React.Component {
                         
                     <View style={styles.inputContainer}>
                             <DefaultInput 
+                              iconName='md-eye'
                               placeholder="Password"
                               value={this.state.controls.password.value}
                               onChangeText={val => this.updateInputState("password", val)}
@@ -169,7 +171,7 @@ const styles = StyleSheet.create({
     },
     viewflexStart: {
       alignItems: 'flex-start',
-      marginBottom: 60
+      marginBottom: 40
     },
     viewCenter: {
       alignItems: 'center'

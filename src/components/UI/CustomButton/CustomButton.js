@@ -11,6 +11,7 @@ const customButton = (props) => {
             <View style={[styles.button, 
                 {backgroundColor: props.bgColor, 
                 borderRadius: props.raduis},
+                props.moreStyle,
                 props.disabled ? styles.disabled : null ]}
             >
                 <Text style={[props.disabled ? styles.disabledText : null , {fontSize: props.size,  color: props.color}]}>

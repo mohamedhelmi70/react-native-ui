@@ -6,7 +6,7 @@ import MainText from '../../components/UI/mainText/mainText';
 
 export default class Stats extends React.Component {
   static navigationOptions = {
-    header: null,
+    title: 'Stats'
   }; 
 
   state= {

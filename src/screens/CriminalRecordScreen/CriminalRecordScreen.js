@@ -7,7 +7,7 @@ import CustomButton from '../../components/UI/CustomButton/CustomButton';
 
 class CriminalRecordScreen extends Component {
     static navigationOptions = {
-       header: null,
+        title: "Criminal Record",
     };
 
    state = {

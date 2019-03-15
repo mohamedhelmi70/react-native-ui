@@ -152,7 +152,7 @@ class PickRecord extends Component {
           rate: this.state.rate,
           shouldCorrectPitch: this.state.shouldCorrectPitch,
         },
-        this._updateScreenForSoundStatus
+        this.updateScreenForSoundStatus
       );
       this.sound = sound;
       this.setState({
@@ -162,9 +162,9 @@ class PickRecord extends Component {
   
     onRecordPressed = () => {
       if (this.state.isRecording) {
-        this._stopRecordingAndEnablePlayback();
+        this.stopRecordingAndEnablePlayback();
       } else {
-        this._stopPlaybackAndBeginRecording();
+        this.stopPlaybackAndBeginRecording();
       }
     };
   
@@ -445,7 +445,8 @@ class PickRecord extends Component {
   const styles = StyleSheet.create({
     emptyContainer: {
       alignSelf: 'stretch',
-      backgroundColor: BACKGROUND_COLOR,
+      backgroundColor: '#faf8fb',
+      height: 100
     },
     container: {
       flex: 1,
@@ -453,22 +454,21 @@ class PickRecord extends Component {
       justifyContent: 'space-between',
       alignItems: 'center',
       alignSelf: 'stretch',
-      backgroundColor: BACKGROUND_COLOR,
-      minHeight: DEVICE_HEIGHT,
-      maxHeight: DEVICE_HEIGHT,
+      backgroundColor: '#faf8fb',
+      minHeight: 100,
+      maxHeight: 150,
     },
     noPermissionsText: {
       textAlign: 'center',
     },
-    wrapper: {},
     halfScreenContainer: {
       flex: 1,
       flexDirection: 'column',
       justifyContent: 'space-between',
       alignItems: 'center',
       alignSelf: 'stretch',
-      minHeight: DEVICE_HEIGHT / 2.0,
-      maxHeight: DEVICE_HEIGHT / 2.0,
+      minHeight: 100.0 / 2.0,
+      maxHeight: 150.0 / 2.0,
     },
     recordingContainer: {
       flex: 1,
@@ -521,10 +521,10 @@ class PickRecord extends Component {
       paddingRight: 20,
     },
     image: {
-      backgroundColor: BACKGROUND_COLOR,
+      backgroundColor: '#faf8fb',
     },
     textButton: {
-      backgroundColor: BACKGROUND_COLOR,
+      backgroundColor: '#faf8fb',
       padding: 10,
     },
     buttonsContainerBase: {
@@ -551,11 +551,11 @@ class PickRecord extends Component {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      minWidth: DEVICE_WIDTH / 2.0,
-      maxWidth: DEVICE_WIDTH / 2.0,
+      minWidth: 200.0 / 2.0,
+      maxWidth: 200.0 / 2.0,
     },
     volumeSlider: {
-      width: DEVICE_WIDTH / 2.0 - ICON_MUTED_BUTTON.width,
+      width: 200.0 / 2.0 - 40.0,
     },
     buttonsContainerBottomRow: {
       maxHeight: ICON_THUMB_1.height,
@@ -564,7 +564,7 @@ class PickRecord extends Component {
       paddingLeft: 20,
     },
     rateSlider: {
-      width: DEVICE_WIDTH / 2.0,
+      width: 350.0 / 2.0,
     },
   });
 

@@ -4,11 +4,10 @@ import { View, StyleSheet} from 'react-native';
 
 import CustomButton from '../../components/UI/CustomButton/CustomButton';
 import PickImage from '../../components/PickImage/PickImage';
-import PickRecord from '../../components/PickRecord/PickRecord';
 
 class IdentityScreen extends Component {
     static navigationOptions = {
-        header: null,
+        title: "Check Identity",
     };
 
     state = {
@@ -51,8 +50,6 @@ class IdentityScreen extends Component {
             <View style={styles.container}>
                 
                 <PickImage onImagePicked={this.pickImageHandler} />
-                
-                <PickRecord />
 
                 <CustomButton onPress={this.checkIdentityHandler} bgColor="#f6b810" size={20}>Check Identity</CustomButton>
             
