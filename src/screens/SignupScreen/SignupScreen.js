@@ -27,7 +27,7 @@ class SignupScreen extends Component {
                 value: "",
                 valid: false,
                 validationRules: {
-                  minLength: 10
+                    isfullName: true
                 },
                 touched: false
             }, 
@@ -43,7 +43,7 @@ class SignupScreen extends Component {
                 value: "",
                 valid: false,
                 validationRules: {
-                    minLength: 6
+                    menLength: 6
                 },
                 touched: false
             },
@@ -51,7 +51,7 @@ class SignupScreen extends Component {
                 value: "",
                 valid: false,
                 validationRules: {
-                equalTo: "password"
+                    equalTo: "password"
                 },
                 touched: false
             }

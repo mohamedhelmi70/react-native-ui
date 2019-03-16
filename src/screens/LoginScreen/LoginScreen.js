@@ -35,7 +35,7 @@ class SignInScreen extends React.Component {
           value: "",
           valid: false,
           validationRules: {
-            minLength: 6
+            menLength: 6
           },
           touched: false
         }

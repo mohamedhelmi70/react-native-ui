@@ -7,7 +7,6 @@ import {
 
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import CustomButton from '../../components/UI/CustomButton/CustomButton';
-import MainText from '../../components/UI/mainText/mainText';
 import validate from '../../utility/validation';
 
 class ChangePasswordScreen extends Component {
@@ -22,7 +21,7 @@ class ChangePasswordScreen extends Component {
                 value: "",
                 valid: false,
                 validationRules: {
-                  minLength: 6
+                  menLength: 6
                 },
                 touched: false
             },
@@ -30,7 +29,7 @@ class ChangePasswordScreen extends Component {
                 value: "",
                 valid: false,
                 validationRules: {
-                  minLength: 6
+                  menLength: 6
                 },
                 touched: false
             },
@@ -69,7 +68,7 @@ class ChangePasswordScreen extends Component {
               confirmPassword: {
                 ...prevState.controls.confirmPassword,
                 valid:
-                  key === "password"
+                  key === "newPassword"
                     ? validate(
                         prevState.controls.confirmPassword.value,
                         prevState.controls.confirmPassword.validationRules,
@@ -104,10 +103,8 @@ class ChangePasswordScreen extends Component {
 
                         <View style={styles.item}>
                            
-                           <MainText>Old Password</MainText>
-                           
                            <DefaultInput 
-                                iconName='md-home'
+                                iconName='md-eye'
                                 placeholder='Old Password'
                                 value={this.state.controls.oldPassword.value}
                                 onChangeText={(val) => this.updateInputState('oldPassword', val)}
@@ -119,10 +116,9 @@ class ChangePasswordScreen extends Component {
                         </View>
                       
                         <View style={styles.item}>
-                        
-                           <MainText>New Password</MainText> 
+                      
                            <DefaultInput 
-                                iconName='md-home' 
+                                iconName='md-eye' 
                                 placeholder='New Password'
                                 value={this.state.controls.newPassword.value}
                                 onChangeText={(val) => this.updateInputState('namePassword', val)}
@@ -135,7 +131,6 @@ class ChangePasswordScreen extends Component {
                       
                         <View style={styles.item}>
                         
-                           <MainText>Confirm Password</MainText> 
                            <DefaultInput 
                                 placeholder='Confirm Password'
                                 value={this.state.controls.confirmPassword.value}
@@ -143,7 +138,7 @@ class ChangePasswordScreen extends Component {
                                 valid={this.state.controls.confirmPassword.valid}
                                 touched={this.state.controls.confirmPassword.touch} 
                                 secureTextType
-                                iconName='md-home'
+                                iconName='md-eye'
                            />
                         
                         </View>
