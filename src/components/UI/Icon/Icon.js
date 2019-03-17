@@ -1,9 +1,9 @@
 import React from 'react';
-import { Icon } from 'expo';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const icon = props => {
     return (
-      <Icon.Ionicons
+      <MaterialIcons
         name={props.name}
         size={props.size}
         style={{top: 5}}

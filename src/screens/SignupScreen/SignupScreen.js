@@ -132,7 +132,7 @@ class SignupScreen extends Component {
                             
                             <View style={styles.inputContainer}>
                                 <DefaultInput 
-                                    iconName='md-new'
+                                    iconName='person'
                                     placeholder="Name"
                                     value={this.state.controls.name.value}
                                     onChangeText={(val) => this.updateInputState('name', val)}
@@ -146,7 +146,7 @@ class SignupScreen extends Component {
                         
                             <View style={styles.inputContainer}>
                                 <DefaultInput 
-                                   iconName='md-person'
+                                   iconName='email'
                                     placeholder="Email"
                                     style={styles.input}
                                     value={this.state.controls.email.value}
@@ -163,7 +163,7 @@ class SignupScreen extends Component {
                             
                             <View style={styles.inputContainer}>
                                 <DefaultInput 
-                                    iconName='md-eye'
+                                    iconName='remove-red-eye'
                                     placeholder="Password"
                                     style={styles.input}
                                     value={this.state.controls.password.value}

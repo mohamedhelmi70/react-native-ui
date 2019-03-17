@@ -104,7 +104,7 @@ class ChangePasswordScreen extends Component {
                         <View style={styles.item}>
                            
                            <DefaultInput 
-                                iconName='md-eye'
+                                iconName='remove-red-eye'
                                 placeholder='Old Password'
                                 value={this.state.controls.oldPassword.value}
                                 onChangeText={(val) => this.updateInputState('oldPassword', val)}
@@ -118,7 +118,7 @@ class ChangePasswordScreen extends Component {
                         <View style={styles.item}>
                       
                            <DefaultInput 
-                                iconName='md-eye' 
+                                iconName='remove-red-eye' 
                                 placeholder='New Password'
                                 value={this.state.controls.newPassword.value}
                                 onChangeText={(val) => this.updateInputState('namePassword', val)}
@@ -138,7 +138,7 @@ class ChangePasswordScreen extends Component {
                                 valid={this.state.controls.confirmPassword.valid}
                                 touched={this.state.controls.confirmPassword.touch} 
                                 secureTextType
-                                iconName='md-eye'
+                                iconName='remove-red-eye'
                            />
                         
                         </View>

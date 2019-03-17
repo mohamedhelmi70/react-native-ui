@@ -90,7 +90,7 @@ class AboutScreen extends Component {
                                 <View style={styles.item}>
                                       
                                     <DefaultInput 
-                                        iconName='md-user'
+                                        iconName='person'
                                         placeholder="ex: mohamed helmy"
                                         value={this.state.controls.name.value}
                                         onChangeText={(val) => this.updateInputState('name', val)}
@@ -105,7 +105,7 @@ class AboutScreen extends Component {
                                 <View style={styles.item}>
                               
                                     <DefaultInput 
-                                        iconName='md-date'
+                                        iconName='today'
                                         placeholder="ex: 25-05-1997"
                                         value={this.state.controls.dateOfBirth.value}
                                         onChangeText={(val) => this.updateInputState('dateOfBirth', val)}
@@ -121,7 +121,7 @@ class AboutScreen extends Component {
                                 
  
                                     <DefaultInput 
-                                        iconName='md-email'
+                                        iconName='email'
                                         placeholder="ex: moh1253@examle.com"
                                         value={this.state.controls.email.value}
                                         onChangeText={(val) => this.updateInputState('email', val)}
@@ -136,7 +136,7 @@ class AboutScreen extends Component {
                                 <View style={styles.item}>
                                  
                                     <DefaultInput 
-                                        iconName='md-phone'
+                                        iconName='phone-android'
                                         placeholder='ex: +1029524141'
                                         value={this.state.controls.phone.value}
                                         onChangeText={(val) => this.updateInputState('phone', val)}
@@ -151,7 +151,7 @@ class AboutScreen extends Component {
                                 <View style={styles.item}>
                                 
                                     <DefaultInput 
-                                        iconName='md-address'
+                                        iconName='my-location'
                                         placeholder='ex: st 15 cairo egypt'
                                         value={this.state.controls.address.value}
                                         onChangeText={(val) => this.updateInputState('address', val)}

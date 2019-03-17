@@ -107,7 +107,7 @@ class SignInScreen extends React.Component {
                       
                     <View style={styles.inputContainer}>
                             <DefaultInput 
-                              iconName='md-person'
+                              iconName='person'
                               placeholder="Email"
                               value={this.state.controls.email.value}
                               onChangeText={(val) => this.updateInputState("email", val)}
@@ -123,7 +123,7 @@ class SignInScreen extends React.Component {
                         
                     <View style={styles.inputContainer}>
                             <DefaultInput 
-                              iconName='md-eye'
+                              iconName='remove-red-eye'
                               placeholder="Password"
                               value={this.state.controls.password.value}
                               onChangeText={val => this.updateInputState("password", val)}
