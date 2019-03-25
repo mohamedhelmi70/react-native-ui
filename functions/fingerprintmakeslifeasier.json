@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "fingerprintmakeslifeeasier",
+  "private_key_id": "904f3575e640e3b6fd1d2efd25f9864e406d0117",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDIdDpg8e4kBNrv\nzQ2z8v8uDygxeIQ06E88hbk5JfrPlKICqsJc5EXv6V4bn04BcFKQTjpSjcg+wYXk\nb9tdKubacjTYUCxE+bodYSE5AMopcWu7ZWn+orpDVQLFRgjc6QA0DLeLZUT4+ayD\no4xkCoFefZzLFEHcp8mW4kTg9BVOWKrUFuLyZAbj9tsOhufpnYBsA3MNRhGyUVJt\nYiEGJJ49X1+z2s0/eXxNyECEdtltzD33d2kf9NsLeSJ2aH8GE3I27hgaBK7p3LTI\nnZbqURuR6PVC3lTw2MuZufFp5QPGiCkcmmgLTned+qOFu0MEzOFyinZ34jq5qt4I\nzEXRr5g/AgMBAAECggEACXtV95f6B8IjCQzOBSENaQRWhmCJAGest9QresSNJJyH\nPVEOeI5jsIF9bhkO+4pwnVrV72m9exp0VuXjnniVCug0D7dbILgfUZxykduztFol\nGmwlo2HXJbAzvVkeujRbShr/45wasxw8SM3HqkPE8s9GR2Th6KoXIwf48hsZlucN\nWzX2ZhcpmHVPCIIWIKeHpX5Xxil2myBjOcaRYikC5xbPTVTn3IAJ4rajMjNnUcfN\n9bFWFGoC/FX1TVaPSHXz6JVCLsIlmXTaGff97vyXraqccbGn4TzRlSiC+n6k/4th\n7Kk0fOYKtrhSuAmUJxXsWhXYwfa95bXRb5jKan5doQKBgQDrbNCqm+haeZ0YxsxJ\nvkaYkEOnqIm741JZBTEqSQN5S3lYaWTdm+iSYT5mp4SCa5C3f7Cp5IFNgKYs/Bkg\nR5eXTKhhGm1y07fF9BKJjr3s0w2PHN9KAYmZft81njxdE09GNwXUu+4vtEAfd8J1\nXxYkKL0/zwssUV8KhYArbx4wawKBgQDZ+QC4KxT4FzMnNXgBXruhFbjAyA+DWCm4\n0MFiXSNeaaoK6ai1DkS+GBkNp4zOKEq91qMXSKgfrmvDU6x4QoLC7ChrBdb1GZNM\nFB9gBdASe0g7LmlG0Igbz14wz9GnLhIeBVz8gl4AK4rUn56cC0ggtvTyoPQi2Z7O\nxYIcGILcfQKBgQCOL0kTUVgSlJKBrUciXo3KhI6nyo1s8Y0BgLZB4Jj9f8zIzdaC\nVTAwgBSs8Q2Bqy9a8/6hjQVe5oz2bEdMjJCMa1riUpC5og7Cuncbpx8j0g/FWF2v\nF6CgGNT8UBYK7KebM44M/neLTiTQHIdQVd5MdmJeEFCiMn7hHuHa2aB1AwKBgDuX\nTLAM7y2oQg7dGlLdkFRIuPrTdxJEfxuMzuHSbsH4B0n2eW4OWZLSyb6m6OLPtydR\nT8Mk1PncWI/NB2DVZiReJeqkbRETDecFtVIuJKV42NV9KcD3b86SkcCsgDfBa6iT\ndMl/5q0LOmhIvzcQCocPHcZbZINGlZkX/CssNFKNAoGAdOscS9wDpJ/jBPHacs8C\nOxDAKYtisZyl9xsg+h4oxluc5hQueuVKF4pYNunbYYDIhPDPcPFj4DP2kkq2Oyhg\n1hQ1SbOctT852oxbEVb3VkC1ZrxJFqfGj0oygXmxXKqWHGeDshsnILL+BfUI5nzD\nsNp8quyfwONbrlLXlIeROR8=\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-eghb0@fingerprintmakeslifeeasier.iam.gserviceaccount.com",
+  "client_id": "118397420809538926764",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-eghb0%40fingerprintmakeslifeeasier.iam.gserviceaccount.com"
+}
