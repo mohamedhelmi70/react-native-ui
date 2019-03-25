@@ -2,6 +2,8 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
+import Colors from '../constants/Colors/Colors';
+
 import TabBarIcon from '../components/TabBarIcon/TabBarIcon';
 import HomeScreen from '../screens/HomeScreen/HomeScreen';
 import StatsScreen from '../screens/StatsScreen/StatsScreen';
@@ -112,5 +114,10 @@ export default createBottomTabNavigator(
     StatsStack,
     IdentityStack,
     ProfileStack
+  },
+  {
+    tabBarOptions: {
+      activeTintColor: Colors.tintColor,
+    },
   }
 );

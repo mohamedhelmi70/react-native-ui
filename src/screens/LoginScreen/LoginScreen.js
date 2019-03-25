@@ -1,12 +1,12 @@
 import React from 'react';
 import { 
   View, 
-  Dimensions,
   StyleSheet, 
   KeyboardAvoidingView, 
   Keyboard, 
   TouchableWithoutFeedback 
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import CustomButton from '../../components/UI/CustomButton/CustomButton';
@@ -14,6 +14,7 @@ import HeadingText from '../../components/UI/HeadingText/HeadingText';
 import MainText from '../../components/UI/mainText/mainText';
 import validate from '../../utility/validation';
 import Button from '../../components/UI/Button/Button';
+import { authSignin } from '../../store/actions/index';
 
 class SignInScreen extends React.Component {
      
@@ -44,7 +45,11 @@ class SignInScreen extends React.Component {
 
 
     signInHandler = () => {
-      this.props.navigation.navigate('App');
+      const authData = {
+        email: this.state.controls.email.value,
+        password: this.state.controls.password.value,
+      };
+      this.props.onLogin(authData);
     };
 
     startSignupScreen = () => {
@@ -88,76 +93,87 @@ class SignInScreen extends React.Component {
     };
 
     render() {
+
+      let submit = <CustomButton 
+          onPress={this.signInHandler} bgColor="#f6b810" 
+          size={20}
+          disabled={ 
+            !this.state.controls.email.valid ||
+            !this.state.controls.password.valid 
+          }  
+        >Login</CustomButton>; 
+
+      if (this.props.isLoading) {
+        submit = <ActivityIndicator size="small" color="#f6b810" />
+      } 
+      
       return (
       
-      <KeyboardAvoidingView style={styles.Container} behavior="padding" enabled>
-        
-            
-              <View style={styles.viewflexStart}>
-                  
-                <HeadingText size={35} fontFamily='Fjalla-one'>Fingerprint Makes Life Easier</HeadingText>
+        <KeyboardAvoidingView style={styles.Container} behavior="padding" enabled>
+          
               
-              </View>
-                  
-              
-              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={styles.viewflexStart}>
+                    
+                  <HeadingText size={35} fontFamily='Fjalla-one'>Fingerprint Makes Life Easier</HeadingText>
+                
+                </View>
+                    
+                
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
-                <View style={styles.viewCenter}>  
+                  <View style={styles.viewCenter}>  
 
-                      
-                    <View style={styles.inputContainer}>
-                            <DefaultInput 
-                              iconName='person'
-                              placeholder="Email"
-                              value={this.state.controls.email.value}
-                              onChangeText={(val) => this.updateInputState("email", val)}
-                              valid={this.state.controls.email.valid}
-                              touched={this.state.controls.email.touched}
-                              autoCapitalize='none'
-                              autoCorrect={false}
-                              placeholderTextColor="#5a6e65"
-                              keyboardType="email-address"
-                              textContentType='emailAddress'
-                            />
-                    </View>
                         
-                    <View style={styles.inputContainer}>
-                            <DefaultInput 
-                              iconName='remove-red-eye'
-                              placeholder="Password"
-                              value={this.state.controls.password.value}
-                              onChangeText={val => this.updateInputState("password", val)}
-                              valid={this.state.controls.password.valid}
-                              touched={this.state.controls.password.touched}
-                              autoCorrect={false}
-                              placeholderTextColor="#5a6e65"
-                              secureTextEntry={true}
-                              textContentType='password'
-                            />
-                    </View>
+                      <View style={styles.inputContainer}>
+                              <DefaultInput 
+                                iconName='person'
+                                placeholder="Email"
+                                value={this.state.controls.email.value}
+                                onChangeText={(val) => this.updateInputState("email", val)}
+                                valid={this.state.controls.email.valid}
+                                touched={this.state.controls.email.touched}
+                                autoCapitalize='none'
+                                autoCorrect={false}
+                                placeholderTextColor="#5a6e65"
+                                keyboardType="email-address"
+                                textContentType='emailAddress'
+                              />
+                      </View>
+                          
+                      <View style={styles.inputContainer}>
+                              <DefaultInput 
+                                iconName='remove-red-eye'
+                                placeholder="Password"
+                                value={this.state.controls.password.value}
+                                onChangeText={val => this.updateInputState("password", val)}
+                                valid={this.state.controls.password.valid}
+                                touched={this.state.controls.password.touched}
+                                autoCorrect={false}
+                                placeholderTextColor="#5a6e65"
+                                secureTextEntry={true}
+                                textContentType='password'
+                              />
+                      </View>
 
-                    <View style={styles.bottom}>
-                            
-                            <CustomButton 
-                            onPress={this.signInHandler} bgColor="#f6b810" size={20}
-                            disabled={ !this.state.controls.email.valid ||!this.state.controls.password.valid }  
-                            >Login</CustomButton> 
-                            
-                            <View style={styles.signupcontainer}>
+                      <View style={styles.bottom}>
                               
-                                <MainText>Don’t have an account?</MainText> 
-                                  
-                                <Button onPress={this.startSignupScreen} color="#f6b810" size={16} marginL={5} >Sign up</Button>  
-                            
-                            </View> 
-                      
-                    </View> 
+                              {submit}
+                              
+                              <View style={styles.signupcontainer}>
+                                
+                                  <MainText>Don’t have an account?</MainText> 
+                                    
+                                  <Button onPress={this.startSignupScreen} color="#f6b810" size={16} marginL={5} >Sign up</Button>  
+                              
+                              </View> 
+                        
+                      </View> 
 
-                  </View>
+                    </View>
+                
+              </TouchableWithoutFeedback>                                
               
-            </TouchableWithoutFeedback>                                
-            
-      </KeyboardAvoidingView>
+        </KeyboardAvoidingView>
       );
     }
   }
@@ -190,4 +206,16 @@ const styles = StyleSheet.create({
     },
 });
 
-export default SignInScreen ;
+const mapStateToptops = state => {
+  return {
+    isLoading: state.ui.isLoading
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onLogin : authData => dispatch(authSignin(authData)) 
+  };
+};
+
+export default connect(mapStateToptops, mapDispatchToProps)(SignInScreen) ;

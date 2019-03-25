@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import {
+  ActivityIndicator,
   StyleSheet, 
   View,
-  KeyboardAvoidingView 
+  KeyboardAvoidingView,
+  TouchableWithoutFeedback,
+  Keyboard
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import CustomButton from '../../components/UI/CustomButton/CustomButton';
 import validate from '../../utility/validation';
+import { changePassword } from '../../store/actions/index';
 
 class ChangePasswordScreen extends Component {
     
@@ -37,7 +42,7 @@ class ChangePasswordScreen extends Component {
                 value: "",
                 valid: false,
                 validationRules: {
-                  equalTo: "password"
+                  equalTo: "newPassword"
                 },
                 touched: false
             }
@@ -91,66 +96,103 @@ class ChangePasswordScreen extends Component {
         });
     };
     
-    saveChangesHandler = () => {
-      this.props.navigation.navigate('profile');
+    changePasswordHandler = () => {
+      this.props.onChanePassword(
+        this.state.controls.oldPassword.value,
+        this.state.controls.newPassword.value
+      )
+      if (true) { /* this.props.validOldPassword */ 
+        this.props.navigation.navigate('profile');
+      } //else {
+        //alert('Old Password not Valid ..!');
+     // }
     }
 
     render() {
+        
+        let submit = <CustomButton 
+        onPress={this.changePasswordHandler} 
+        bgColor='#f6b810' 
+        size={20} 
+        disabled={ 
+          !this.state.controls.oldPassword.valid || 
+          !this.state.controls.newPassword.valid || 
+          !this.state.controls.confirmPassword.valid 
+          }
+        >Save Changes</CustomButton>;
+        
+        if (this.props.isLoading) {
+          submit = <ActivityIndicator size="small" color="#f6b810" />
+        }
+
         return (
-            <KeyboardAvoidingView style={styles.Container}>
+            <KeyboardAvoidingView style={styles.container}  behavior="padding" enabled>
                 
-                <View style={styles.Center}>
-
-                        <View style={styles.item}>
-                           
-                           <DefaultInput 
-                                iconName='remove-red-eye'
-                                placeholder='Old Password'
-                                value={this.state.controls.oldPassword.value}
-                                onChangeText={(val) => this.updateInputState('oldPassword', val)}
-                                valid={this.state.controls.oldPassword.valid}
-                                touched={this.state.controls.oldPassword.touch}
-                                secureTextType
-                            />
-                        
-                        </View>
-                      
-                        <View style={styles.item}>
-                      
-                           <DefaultInput 
-                                iconName='remove-red-eye' 
-                                placeholder='New Password'
-                                value={this.state.controls.newPassword.value}
-                                onChangeText={(val) => this.updateInputState('namePassword', val)}
-                                valid={this.state.controls.newPassword.valid}
-                                touched={this.state.controls.newPassword.touch}
-                                secureTextType
-                            />
-                        
-                        </View>
-                      
-                        <View style={styles.item}>
-                        
-                           <DefaultInput 
-                                placeholder='Confirm Password'
-                                value={this.state.controls.confirmPassword.value}
-                                onChangeText={(val) => this.updateInputState('confirmPassword', val)}
-                                valid={this.state.controls.confirmPassword.valid}
-                                touched={this.state.controls.confirmPassword.touch} 
-                                secureTextType
-                                iconName='remove-red-eye'
-                           />
-                        
-                        </View>
-                      
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                   
-                        <View>
+                  <View style={styles.center}>
+
+                          <View style={styles.item}>
+                            
+                            <DefaultInput 
+                                  iconName='remove-red-eye'
+                                  placeholder="Old Password"
+                                  value={this.state.controls.oldPassword.value}
+                                  onChangeText={val => this.updateInputState("oldPassword", val)}
+                                  valid={this.state.controls.oldPassword.valid}
+                                  touched={this.state.controls.oldPassword.touched}
+                                  autoCorrect={false}
+                                  placeholderTextColor="#5a6e65"
+                                  secureTextEntry={true}
+                                  textContentType='password'
+                              />
                           
-                          <CustomButton onPress={this.saveChangesHandler} bgColor='#f6b810' size={20} >Save Changes</CustomButton>
+                          </View>
+                        
+                          <View style={styles.item}>
+                        
+                            <DefaultInput 
+                                  iconName='remove-red-eye'
+                                  placeholder="New Password"
+                                  value={this.state.controls.newPassword.value}
+                                  onChangeText={val => this.updateInputState("newPassword", val)}
+                                  valid={this.state.controls.newPassword.valid}
+                                  touched={this.state.controls.newPassword.touched}
+                                  autoCorrect={false}
+                                  placeholderTextColor="#5a6e65"
+                                  secureTextEntry={true}
+                                  textContentType='password'
+                              />
+                          
+                          </View>
+                        
+                          <View style={styles.item}>
+                          
+                            <DefaultInput 
+                                  iconName='remove-red-eye'
+                                  placeholder="Confirm Password"
+                                  value={this.state.controls.confirmPassword.value}
+                                  onChangeText={val => this.updateInputState("confirmPassword", val)}
+                                  valid={this.state.controls.confirmPassword.valid}
+                                  touched={this.state.controls.confirmPassword.touched}
+                                  autoCorrect={false}
+                                  placeholderTextColor="#5a6e65"
+                                  secureTextEntry={true}
+                                  textContentType='password'
+                            />
+                          
+                          </View>
+                        
+                    
+                          <View style={styles.bottom}>
+                            
+                            {submit}
 
-                        </View>                    
-                  
-                </View>
+                          </View>                    
+                    
+                  </View>
+
+                </TouchableWithoutFeedback>
                
             </KeyboardAvoidingView>
         );  
@@ -159,12 +201,12 @@ class ChangePasswordScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    Container: {
+    container: {
       flex: 1,
       backgroundColor: '#faf8fb',
       padding: 10,
     },
-    Center: {
+    center: {
       alignItems: 'center',
       marginTop: 40,
       width: '100%' 
@@ -172,7 +214,23 @@ const styles = StyleSheet.create({
     item: {
       padding: 10,
       width: '80%' 
+    },
+    bottom: {
+      marginTop: 30
     }
 });
 
-export default ChangePasswordScreen;
+const mapStateToProps = state => {
+  return {
+    validOldPassword: state.auth.validOldPassword,
+    isLoading: state.ui.isLoading,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onChanePassword: (oldPassword, newPassword) => dispatch(changePassword(oldPassword, newPassword)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ChangePasswordScreen);

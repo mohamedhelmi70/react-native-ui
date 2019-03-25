@@ -1,9 +1,18 @@
 import React, { Component } from 'react';
-import {StyleSheet, View, ScrollView, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import {
+    StyleSheet, 
+    View, 
+    ScrollView, 
+    KeyboardAvoidingView, 
+    TouchableWithoutFeedback, 
+    Keyboard 
+} from 'react-native';
+import { connect } from 'react-redux';
 
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import CustomButton from '../../components/UI/CustomButton/CustomButton';
 import validate from '../../utility/validation';
+import { changeData } from '../../store/actions/index';
 
 class AboutScreen extends Component {
 
@@ -67,7 +76,6 @@ class AboutScreen extends Component {
                 valid: validate(
                   value,
                   prevState.controls[key].validationRules,
-                  connectedValue
                 ),
                 touched: true
               }
@@ -75,13 +83,25 @@ class AboutScreen extends Component {
           };
         });
     };
-
+    
+    SaveChangesHndler = () => {
+        const changedData = {
+            name: this.state.controls.name.value,
+            email:this.state.controls.email.value,
+            phone:this.state.controls.phone.value,
+            address:this.state.controls.address.value,
+            dateOfBirth:this.state.controls.dateOfBirth.value,
+        };
+        this.props.onSaveChanges(changedData);
+        this.props.navigation.navigate('profile');
+    }
     
     render() {
         return (
-            <KeyboardAvoidingView style={styles.Container} behavior="padding" enabled>
+          
+            <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
                 
-                <ScrollView>
+                <ScrollView style={{flex: 1}}>
 
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                     
@@ -163,8 +183,22 @@ class AboutScreen extends Component {
 
                                 </View>
                         
-                            <View>
-                                <CustomButton onPress={() => ('Save Changes')} bgColor='#f6b810' size={20} >Save Changes</CustomButton>
+                            <View style={{marginTop: 10}}>
+
+                                <CustomButton 
+                                    onPress={this.SaveChangesHndler} 
+                                    bgColor='#f6b810' size={20} 
+                                    disabled={ 
+                                        !this.state.controls.email.valid &&
+                                        !this.state.controls.name.valid &&
+                                        !this.state.controls.phone.valid &&
+                                        !this.state.controls.dateOfBirth.valid &&
+                                        !this.state.controls.address.valid 
+                                     
+                                    }  
+                                >
+                                    Save Changes
+                                </CustomButton>
 
                             </View>        
                     
@@ -181,7 +215,7 @@ class AboutScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    Container: {
+    container: {
         flex: 1,
         backgroundColor: '#faf8fb',
         padding: 10
@@ -196,4 +230,10 @@ const styles = StyleSheet.create({
     }
 });
 
-export default AboutScreen;
+const mapDispatchToProps = dispatch => {
+    return {
+        onSaveChanges: changedData => dispatch(changeData(changedData)),
+    };
+};
+
+export default connect(null, mapDispatchToProps)(AboutScreen);

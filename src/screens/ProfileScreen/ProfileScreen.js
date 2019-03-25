@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, StyleSheet} from 'react-native'; 
+import { connect } from 'react-redux';
 
 import UserAvatar from '../../components/UI/UserAvatar/UserAvatar';
 import Button from '../../components/UI/Button/Button';
 import Icon from '../../components/TabBarIcon/TabBarIcon';
 import MainText from '../../components/UI/mainText/mainText';
+import { authLogout } from '../../store/actions/index';
 
 class ProfileScreen extends React.Component {
   
@@ -37,8 +39,7 @@ class ProfileScreen extends React.Component {
   }
 
   signoutHandler = async () => {
-    // await AsyncStorage.clear();
-    this.props.navigation.navigate('Auth');
+    await this.props.onLogout();
   }
 
   render() {
@@ -164,4 +165,10 @@ const styles =StyleSheet.create({
   }
 });
 
-export default ProfileScreen;
+const mapDispatchToProps = dispatch => {
+  return {
+    onLogout: () => dispatch(authLogout()),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(ProfileScreen);

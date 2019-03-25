@@ -1,51 +1,32 @@
-import { createReactNavigationReduxMiddleware } from 'react-navigation-redux-helpers';
-import storage from 'redux-persist/lib/storage';
-import { persistReducer, persistStore } from 'redux-persist';
-import thunk from 'redux-thunk';
-import { createLogger } from 'redux-logger';
-import { createStore, applyMiddleware } from 'redux';
-import appReducer from '../store/reducers/appReducer';
-  
+
+import { createStore, applyMiddleware, compose} from 'redux';
+import {
+    createReduxContainer,
+    createReactNavigationReduxMiddleware,
+} from 'react-navigation-redux-helpers';
+import logger from 'redux-logger';
+import {thunk} from 'redux-thunk';
+import { connect } from 'react-redux';
+
+import AppNavigator from '../navigation/AppNavigator';
+import appReducer from './reducers/appReducer';
+
+let composeEnhancers = compose;
+
 const middleware = [];
 
 middleware.push(thunk);
 
-const persistConfig = {
-    version: 0,
-    key: 'root',
-    whitelist: ['nav'],
-    storage,
-};
-  
+middleware.push(createReactNavigationReduxMiddleware(state => state.nav ));
 
-const loggerConfig = {
-    duration: true,
-    diff: true,
-};
-  
-const loggerMiddleware = createLogger(loggerConfig);
-
-const navigationMiddleware = createReactNavigationReduxMiddleware(
-    'root',
-    state => state.nav,
-);
-
-middleware.push(navigationMiddleware);
-
-// eslint-disable-next-line no-undef
 if (__DEV__) {
-  // log only in dev
-  middleware.push(loggerMiddleware);
+    composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 }
 
+const App = createReduxContainer(AppNavigator);
 
-const persistedReducer = persistReducer(persistConfig, appReducer);
+const mapStateToProps = state => ({ state: state.nav });
+ 
+export const AppWithNavigationState = connect(mapStateToProps)(App);
 
-const store = createStore(
-  persistedReducer,
-  applyMiddleware(...middleware),
-);
-
-const persistor = persistStore(store);
-
-export { store , persistor };
+export const store = createStore(appReducer, composeEnhancers(applyMiddleware(...middleware)));

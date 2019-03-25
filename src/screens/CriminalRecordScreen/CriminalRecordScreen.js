@@ -1,52 +1,73 @@
 import React, { Component } from 'react';
 import {View, StyleSheet} from 'react-native';
-
+import { connect } from 'react-redux';
 
 import PickImage from '../../components/PickImage/PickImage';
 import CustomButton from '../../components/UI/CustomButton/CustomButton';
+import { addCriminalRecord, checkCriminalRecrod } from '../../store/actions/identity';
 
 class CriminalRecordScreen extends Component {
+    
     static navigationOptions = {
         title: "Criminal Record",
     };
 
-   state = {
+    state = {
         controls: {
-            image: {
+            criminalRecordImage: {
                 value: null,
                 valid: false 
             }     
         } 
+        
     };
 
-   imagePickedHandler = image => {
+    criminalRecordPickedHandler = criminalrecord => {
         this.setState(prevState => {
             return {
               controls: {
                 ...prevState.controls,
-                image: {
-                  value: image,
+                criminalRecordImage: {
+                  value: criminalrecord,
                   valid: true
                 }   
               }               
             };
         });
-   }
+       
+      this.props.onAddCriminalRecord(this.state.controls.criminalRecordImage.value);
+    }
    
     criminalCheckHandler = () => {
-       // this.props.onCheckCriminal(
-       //     this.state.controls.image.value
-       // )
+        this.props.onCheckCriminalRecord();
     }
 
-   render() {
-       return (
+    render() {
+        
+        let submit = <CustomButton 
+            onPress={this.criminalCheckHandler} 
+            bgColor="#f6b810"  
+            size={20} 
+            disabled={
+                !this.state.controls.criminalRecordImage.valid 
+            }
+        >Check</CustomButton>;
+        
+        if (this.props.isLoading) {
+          submit = <ActivityIndicator size="small" color="#f6b810" />
+        }
+
+        return (
            <View style={styles.container}>
-               <PickImage onImagePicked={this.imagePickedHandler} />
-               <CustomButton onPress={this.criminalCheckHandler} bgColor="#f6b810"  size={20} >Check Criminal Record</CustomButton>
+               
+               <PickImage onImagePicked={this.criminalRecordPickedHandler} />
+               
+               {submit}
+       
            </View>
        );
-   } 
+    } 
+
 }
 
 const styles = StyleSheet.create({
@@ -59,4 +80,17 @@ const styles = StyleSheet.create({
     }, 
 });
 
-export default CriminalRecordScreen;
+const mapStateToProps = state => {
+    return {
+       isLoading: state.ui.isLoading 
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+       onAddCriminalRecord : criminalrecord => dispatch(addCriminalRecord(criminalrecord)),
+       onCheckCriminalRecord: () => dispatch(checkCriminalRecrod()),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps )(CriminalRecordScreen);

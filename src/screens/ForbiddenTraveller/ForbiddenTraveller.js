@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { View, StyleSheet} from 'react-native';
+import { connect } from 'react-redux';
 
 import CustomButton from '../../components/UI/CustomButton/CustomButton';
 import PickImage from '../../components/PickImage/PickImage';
+import { addFingerprint, checkForbiddenTraveller } from '../../store/actions/identity';
 
 class IdentityScreen extends Component {
     static navigationOptions = {
@@ -11,40 +13,53 @@ class IdentityScreen extends Component {
 
     state = {
         controls: {
-            imagePicked: {
+            fingerprintPicked: {
                 value: null,
                 valid: false
             },
         }
     };
 
-    pickImageHandler = image => {
+    fingerprintPickedHandler = fingerprint => {
         this.setState(prevState => {
             return {
-               controls: {
-                    ...prevState.controls,
-                    image: {
-                        value: image,
-                        valid: true
-                    }
-               }    
+                ...prevState.controls,
+                fingerprintPicked: {
+                    value: fingerprint,
+                    valid: true
+                }
             };
         });
+       this.props.onAddFingerprint(this.state.controls.fingerprintPicked.value);
     };
 
     checkTravellerHandler = () => {
+        this.props.onCheckForbidden();
         this.props.navigation.navigate('details');
     }
      
     render() {
-       return (
+       
+        let submit = <CustomButton 
+            onPress={this.checkTravellerHandler} 
+            bgColor="#f6b810"  
+            size={20} 
+            disabled={
+                !this.state.controls.fingerprintPicked.valid 
+            }
+            >Check</CustomButton>;
+    
+        if (this.props.isLoading) {
+            submit = <ActivityIndicator size="small" color="#f6b810" />
+        }
+
+        return (
             <View style={styles.container}>
                 
               
-                <PickImage onImagePicked={this.pickImageHandler} />
+                <PickImage onImagePicked={this.fingerprintPickedHandler} />
                     
-                <CustomButton onPress={this.checkTravellerHandler} bgColor="#f6b810"  size={20} >Check</CustomButton>
-            
+                {submit}
 
             </View>
        );
@@ -62,4 +77,17 @@ const styles = StyleSheet.create({
     },
 });
 
-export default IdentityScreen;
+const mapStateToProps = state => {
+    return {
+       isLoading: state.ui.isLoading
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+       onAddFingerprint : fingerprint => dispatch(addFingerprint(fingerprint)),
+       onCheckForbidden: () => dispatch(checkForbiddenTraveller()),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps )(IdentityScreen);

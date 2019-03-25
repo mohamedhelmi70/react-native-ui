@@ -4,9 +4,10 @@ import {
     StyleSheet,
     TouchableWithoutFeedback,
     Keyboard,
-    KeyboardAvoidingView 
+    KeyboardAvoidingView,
+    ActivityIndicator 
 } from 'react-native';
-
+import { connect } from 'react-redux';
 
 import DefaultInput from '../../components/UI/DefaultInput/DefaultInput';
 import HeadingText from '../../components/UI/HeadingText/HeadingText'
@@ -14,6 +15,7 @@ import CustomButton from '../../components/UI/CustomButton/CustomButton';
 import MainText from '../../components/UI/mainText/mainText';
 import validate from '../../utility/validation';
 import Button from '../../components/UI/Button/Button';
+import { authSignup } from '../../store/actions/index';
 
 class SignupScreen extends Component {
 
@@ -59,7 +61,12 @@ class SignupScreen extends Component {
     };
        
     signupHandler = () => {
-        this.props.navigation.navigate('App');
+        const authData = {
+            name: this.state.controls.name.value,
+            email: this.state.controls.email.value,
+            password: this.state.controls.password.value
+        };
+        this.props.onSignup(authData);
     };
 
     startLoginScreen = () => {
@@ -114,6 +121,21 @@ class SignupScreen extends Component {
 
 
     render (){
+        let submit =  <CustomButton 
+                onPress={this.signupHandler} 
+                bgColor="#f6b810" size={20}
+                disabled={
+                    !this.state.controls.confirmPassword.valid ||
+                    !this.state.controls.email.valid ||
+                    !this.state.controls.password.valid ||
+                    !this.state.controls.name.valid 
+                }
+            >Sign up</CustomButton>;
+
+        if (this.props.isLoading) {
+        submit = <ActivityIndicator size="small" color="#f6b810" />
+        }
+
         return (
             <KeyboardAvoidingView style={styles.Container}  behavior="padding" enabled>
                 
@@ -178,7 +200,7 @@ class SignupScreen extends Component {
                             </View>
                             <View style={styles.inputContainer}>
                                 <DefaultInput 
-                                    iconName='md-eye'
+                                    iconName='remove-red-eye'
                                     placeholder="Confirm Password"
                                     style={styles.input}
                                     value={this.state.controls.confirmPassword.value}
@@ -194,16 +216,7 @@ class SignupScreen extends Component {
                             
                             <View style={styles.bottom}>
                                    
-                                    <CustomButton 
-                                        onPress={this.signupHandler} 
-                                        bgColor="#f6b810" size={20}
-                                        disabled={
-                                            !this.state.controls.confirmPassword.valid ||
-                                            !this.state.controls.email.valid ||
-                                            !this.state.controls.password.valid ||
-                                            !this.state.controls.name.valid 
-                                        }
-                                    >Sign up</CustomButton>
+                                   {submit}
                                     
                                     <View style={styles.logincontainer}>
                                     
@@ -257,4 +270,16 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SignupScreen;
+const mapStateToProps = state => {
+    return {
+       isLoading: state.ui.isLoading
+    };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+       onSignup: (authData) => dispatch(authSignup(authData))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignupScreen);

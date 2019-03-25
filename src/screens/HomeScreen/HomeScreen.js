@@ -29,7 +29,7 @@ class HomeScreen extends Component {
         <View style={styles.viewflexStart}>
 
           <HeadingText 
-            size={30} 
+            size={28} 
             moreStyle={{marginTop: 20, marginLeft: 5}} 
             fontFamily='Fjalla-one'
           >
@@ -40,15 +40,33 @@ class HomeScreen extends Component {
 
         <View style={styles.buttonsContainer}>
         
-          <CustomButton onPress={this.startCriminalRecord} moreStyle={{width: 300, height: 55}} bgColor="#f6b810" size={20} raduis={20}>
+          <CustomButton 
+            onPress={this.startCriminalRecord} 
+            moreStyle={{width: 300, height: 55}} 
+            bgColor="#f6b810" 
+            size={20} 
+            raduis={20}
+          >
             Validate Criminal Record
           </CustomButton>
         
-          <CustomButton onPress={this.startIdentity} moreStyle={{width: 300, height: 55}} bgColor="#f6b810" size={20} raduis={20}>
+          <CustomButton 
+            onPress={this.startIdentity} 
+            moreStyle={{width: 300, height: 55}} 
+            bgColor="#f6b810" 
+            size={20} 
+            raduis={20}
+          >
             Check Identity
           </CustomButton>
             
-          <CustomButton onPress={this.startForbiddenTraveller} moreStyle={{width: 300, height: 55}} bgColor="#f6b810" size={20} raduis={20} >
+          <CustomButton 
+            onPress={this.startForbiddenTraveller} 
+            moreStyle={{width: 300, height: 55}} 
+            bgColor="#f6b810" 
+            size={20} 
+            raduis={20} 
+          >
             Check Forbidden traveller
           </CustomButton>
         

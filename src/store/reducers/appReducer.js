@@ -1,13 +1,17 @@
 import { combineReducers } from 'redux';
-import navigationReducer from './navigationReducer';
 import authReducer from './authReducer';
 import identityReducer from './identityReducer'
-  
-const AppReducer = combineReducers({
-    navigationReducer,
-    authReducer,
-    identityReducer,
-});
-  
+import uiReducer from './uiReducer';
+import { createNavigationReducer } from 'react-navigation-redux-helpers';
+import AppNavigator from '../../navigation/AppNavigator';
 
-export default AppReducer;
+
+const navReducer = createNavigationReducer(AppNavigator);
+const appReducer = combineReducers({
+  nav: navReducer, // required, handle actions from react-navigation
+  identity: identityReducer,
+  auth: authReducer,
+  ui: uiReducer,
+});
+
+export default appReducer;

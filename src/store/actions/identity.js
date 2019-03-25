@@ -1,22 +1,55 @@
-import { CHECK_CRIMINALRECORD ,CHECK_RECORD , CHECK_IMAGE } from './actionTypes'
+import { 
+    ADD_CRIMINALRECORD , 
+    ADD_RECORD , 
+    ADD_IMAGE,
+    CHECK_CRIMINALRECORD, 
+    ADD_FINGERPRINT, 
+    CHECK_IDENTITY,
+    CHECK_FORBIDDENTRAVELLER
+} from './actionTypes'
 
-export const checkCriminalRecord = (image) => {
+export const addFingerprint = fingerprint => {
     return {
-        type: CHECK_CRIMINALRECORD,
-        image: image
+        type: ADD_FINGERPRINT,
+        fingerprint: fingerprint
     };
 };
 
-export const checkRecord = (record) => {
+export const checkCriminalRecord = () => {
     return {
-        type: CHECK_RECORD,
+        type: CHECK_CRIMINALRECORD,
+    };
+};
+
+export const checkIdentity = () => {
+    return {
+        type: CHECK_IDENTITY,
+    };
+};
+
+export const checkForbiddenTraveller = () => {
+    return {
+        type: CHECK_FORBIDDENTRAVELLER,
+    };
+};
+
+export const addCriminalRecord = criminalrecord => {
+    return {
+        type: ADD_CRIMINALRECORD,
+        criminalrecord: criminalrecord
+    };
+};
+
+export const addRecord = record => {
+    return {
+        type: ADD_RECORD,
         record: record
     };
 };
 
-export const checkImage = (image) => {
+export const addImage = image => {
     return {
-        type: CHECK_IMAGE,
+        type: ADD_IMAGE,
         image: image
     };
 };
