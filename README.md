@@ -21,16 +21,3 @@ There are an online staging version for FingerprintMakesLifeEasier App ( ```Soon
 ## What is the pattern and the archeticture that i used ?
 * I’ve did what I see simple and good in the same time for this application.
 * I've created a custom component for each segment in code that might be reusable later.
-
-### Setup prerequists
-* you have to install NodeJS as it's the service and also to use its package manager npm.
-
-### How to run the application
-
-* clone or download files in some place.
-* open CMD or Terminal in the root folder you just cloned.
-* write this command ```npm install``` to install dependencies.
-* then write ```npm test``` to run tests and make sure that they are all green.
-* Finally write ```npm start``` to start application
-* Install the Expo app on your Android device.
-* Scan the QR code in your terminal from the Expo app to run the project on your phone.
