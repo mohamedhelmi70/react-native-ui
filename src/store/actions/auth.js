@@ -5,7 +5,7 @@ import { AUTH_SET_TOKEN, AUTH_REMOVE_TOKEN } from './actionTypes';
 export const addAvatar = avatar => {
     return dispatch => {
         dispatch(uiStartLoading());
-        fetch('https://console.firebase.google.com/project/fingerprintmakeslifeeasier/storeImage', {
+        fetch('https://us-central1-fingerprintmakeslifeeasier.cloudfunctions.net/storeImage', {
             method: "POST",
             body: JSON.stringify({
                 image: avatar.base64
