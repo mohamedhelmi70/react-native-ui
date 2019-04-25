@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, StyleSheet, Image} from 'react-native';
+import {View, StyleSheet, Image, Text} from 'react-native';
 import { ImagePicker } from 'expo';
 
 import CustomButton from '../UI/CustomButton/CustomButton';
@@ -7,31 +7,44 @@ import CustomButton from '../UI/CustomButton/CustomButton';
 class PickImage extends Component {
     
     state = {
-        image: null
+        pickedImage: null
     }
-    
-    pickImageHandler = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync(
-            {allowsEditing: true,
-             aspect: [4,3]   
-            });
-        if(!result.cancelled) {
-            this.setState({
-                image: result.uri
-            });
-            this.props.onImagePicked({uri: result.uri, base64: result.data});
-        }    
+     
+    takeImageHandler = async () => {
+      const result = await ImagePicker.launchCameraAsync(
+          {allowsEditing: true,
+            quality: 1, 
+            aspect: [4,3]   
+          });
+      if(!result.cancelled) {
+          this.setState({
+            pickedImage: result.uri
+          });
+          this.props.onImagePicked({uri: result.uri, base64: result.data});
+      }    
     };
 
     render () {
+
+        
+        const image = (<Image source={{uri: this.state.pickedImage}} style={styles.previewImage}/>);
+        const text = (<Text style={styles.txt}> { this.props.text } </Text>); 
+        
         return (
             <View style={styles.container}>
-                <View style={styles.placeholder}>
-                    <Image source={{uri:this.state.image}} style={styles.previewImage}/>
+
+                <View style={[styles.placeholder, {width: this.props.wth , hight: this.props.hht} ]}>
+                    
+                    {this.state.pickedImage === null ?  text : image }  
+                    
                 </View>
+            
                 <View style={styles.button}>
-                    <CustomButton onPress={this.pickImageHandler} color="#f6b810">Pick Image</CustomButton>
+            
+                    <CustomButton onPress={this.takeImageHandler} color="#f6b810">capture Image</CustomButton>
+            
                 </View>
+            
             </View>
         );
     }
@@ -46,8 +59,7 @@ const styles = StyleSheet.create({
        borderWidth: 1,
        borderColor: '#000',
        backgroundColor: '#fff',
-       width: "80%",
-       height: 150 
+       borderStyle: 'dashed',
     },
     previewImage: {
        width: "100%",
@@ -55,6 +67,10 @@ const styles = StyleSheet.create({
     },
     button: {
         margin: 8
+    },
+    txt: {
+        justifyContent: 'center',
+        fontSize: 16, 
     }
 });
 

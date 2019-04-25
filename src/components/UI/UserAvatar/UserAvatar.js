@@ -10,7 +10,7 @@ class UserAvatar extends React.Component {
 
     
     changeAvatarHandler = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync(
+        const result = await ImagePicker.launchCameraAsync(
             {allowsEditing: true,
              aspect: [4,3]   
             });
@@ -38,16 +38,16 @@ class UserAvatar extends React.Component {
 }
 
 const styles = StyleSheet.create({
-   ava: {
+    ava: {
        width:60,
        height:60,
        borderRadius: 30,
-   },
-   img: {
+    },
+    img: {
        width: 60,
        height: 60,
        borderRadius: 30
-   }
+    }
 
 });
 

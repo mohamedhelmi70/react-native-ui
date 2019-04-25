@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text, StyleSheet} from 'react-native';
 
-import Colors from '../../../constants/Colors/Colors';
+import * as theme from '../../../constants/Theme/Theme';
 
 const headingText = props => (
     <Text style={[styles.mainText, {fontSize: props.size}, {fontFamily: props.fontFamily}, props.moreStyle]}>{props.children}</Text>
@@ -9,7 +9,7 @@ const headingText = props => (
 
 const styles = StyleSheet.create({
     mainText:{
-        color: Colors.blackColor,
+        color: theme.colors.blackColor,
         backgroundColor: 'transparent',
         fontWeight: 'bold'
     }

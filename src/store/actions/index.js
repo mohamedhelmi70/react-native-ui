@@ -1,18 +1,19 @@
-export { 
-    checkCriminalRecord, 
-    checkRecord, 
-    checkImage 
-} from './identity';
-
-export { 
-    authSignin, 
-    authSignup, 
-    changePassword,
-    authAutoSignIn, 
-    authLogout 
-} from './auth';
-
 export {
-    uiStartLoading, 
-    uiStopLoading
-} from './ui';
+    loginSuccess,
+    loginFailure,
+    logoutSuccess,
+    logoutFailure,
+    signUpSuccess,
+    signUpFailure,
+    syncUser,
+    login,
+    logout,
+    signUp,
+    resetPassword,
+    resetPasswordSuccess,
+    resetPasswordFailure,
+    confirmPasswordSuccess,
+    confirmPasswordFailure,
+    confirmPassword,
+    confirmCode
+} from '../actions/auth';

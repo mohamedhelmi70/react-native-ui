@@ -1,7 +1,12 @@
 import React from 'react';
 import { AppLoading, Asset, Font, Icon } from 'expo';
-import { Provider} from 'react-redux';
-import {store, AppWithNavigationState } from './src/store/store';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/lib/integration/react';
+import createStore from './src/store';
+import AppNavigator from './src/navigation/AppNavigator';
+import NavigationService from './src/services/NavigationService';
+
+const { store, persistor } = createStore();
 
 export default class App extends React.Component {
   state = {
@@ -9,6 +14,7 @@ export default class App extends React.Component {
   };
 
   render() {
+
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
         <AppLoading
@@ -20,7 +26,13 @@ export default class App extends React.Component {
     } else {
       return (
         <Provider store={store}>
-            <AppWithNavigationState />
+          <PersistGate loading={null} persistor={persistor}>
+            <AppNavigator
+              ref={navigatorRef => {
+                NavigationService.setTopLevelNavigator(navigatorRef);
+              }}
+            />
+          </PersistGate>
         </Provider>
       );
     }
@@ -28,10 +40,6 @@ export default class App extends React.Component {
 
   _loadResourcesAsync = async () => {
     return Promise.all([
-      Asset.loadAsync([
-        require('./src/assets/images/robot-dev.png'),
-        require('./src/assets/images/robot-prod.png'),
-      ]),
       Font.loadAsync({
         // This is the font that we are using for our tab bar
         ...Icon.Ionicons.font,

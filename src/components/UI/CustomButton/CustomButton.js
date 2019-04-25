@@ -10,7 +10,9 @@ const customButton = (props) => {
     const content =  (
             <View style={[styles.button, 
                 {backgroundColor: props.bgColor, 
-                borderRadius: props.raduis},
+                borderRadius: props.raduis,
+                width: props.width
+                },
                 props.moreStyle,
                 props.disabled ? styles.disabled : null ]}
             >
@@ -32,7 +34,6 @@ const customButton = (props) => {
 const styles = StyleSheet.create({
     button: {
         padding: 10,
-        width: 250, 
         height: 45, 
         marginBottom: 20,
         alignItems: 'center'

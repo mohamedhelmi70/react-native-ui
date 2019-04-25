@@ -1,27 +1,52 @@
-import { AUTH_SET_TOKEN, AUTH_REMOVE_TOKEN } from '../actions/actionTypes';
+import { 
+  SYNC_USER, 
+  LOGIN_FAILURE, 
+  LOGOUT_FAILURE, 
+  SIGNUP_FAILURE,
+  CONFIRM_PASSWORD_FAILURE,
+  RESET_PASSWORD_FAILUR 
+} from '../actions/actionTypes';
 
-const initailState = {
-   token: null,
-   expiryDate: null
+const initialState = {
+  user: '',
+  message: '',
 };
 
-const reducer = (state = initailState , action) => {
-   switch(action.type) {
-      case AUTH_SET_TOKEN:
-         return {
-            ...state,
-            token: action.token,
-            expiryDate: action.expiryDate
-         };
-      case AUTH_REMOVE_TOKEN:
-         return {
-            ...state,
-            token: null,
-            expiryDate: null
-         };
-      default: 
-         return state;        
-   }
+const authReducer  = (state = initialState, action) => {
+  switch(action.type) {
+    case SYNC_USER:
+      return {
+        ...state,
+        user: action.payload.user,
+      };
+    case LOGIN_FAILURE:
+      return {
+        ...state,
+        message: `Login In error ${action.payload.error.message}`
+      };
+    case SIGNUP_FAILURE:
+      return {
+        ...state,
+        message: `Sign Up error ${action.payload.error.message}`
+      };
+    case LOGOUT_FAILURE:
+      return {
+        ...state,
+        message: `Logout error ${action.payload.error.message}`
+      };
+    case CONFIRM_PASSWORD_FAILURE:
+      return {
+        ...state,
+        message: `Confirm password error ${action.payload.error.message}`  
+      };
+    case RESET_PASSWORD_FAILUR:
+      return {
+        ...state,
+        message: `Reset password error ${action.payload.error.message}`
+      }      
+    default:
+      return state;       
+  }
 };
 
-export default reducer;
+export default authReducer;

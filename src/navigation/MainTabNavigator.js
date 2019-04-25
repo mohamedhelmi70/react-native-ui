@@ -2,25 +2,25 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
-import Colors from '../constants/Colors/Colors';
+import * as  theme  from '../constants/Theme/Theme';
 
 import TabBarIcon from '../components/TabBarIcon/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen/HomeScreen';
-import StatsScreen from '../screens/StatsScreen/StatsScreen';
-import ProfileScreen from '../screens/ProfileScreen/ProfileScreen';
-import IdentityScreen from '../screens/IdentityScreen/IdentityScreen';
-import CriminalRecordScreen from '../screens/CriminalRecordScreen/CriminalRecordScreen';
-import ForbiddenTravellerScreen from '../screens/ForbiddenTraveller/ForbiddenTraveller';
-import Details from '../screens/DetailsScreen/DetailsScreen';
-import ChangePasswordScreen from '../screens/ChangePasswordScreen/ChangePasswordScreen';
-import AboutScreen from '../screens/AboutScreen/AboutScreen';
-
+import HomeScreen from '../screens/MainTab/HomeScreen/HomeScreen';
+import AddScreen from '../screens/MainTab/AddScreen/AddScreen';
+import ProfileScreen from '../screens/MainTab/ProfileScreen/ProfileScreen';
+import IdentityScreen from '../screens/MainTab/IdentityScreen/IdentityScreen';
+import CriminalRecordScreen from '../screens/MainTab/CriminalRecordScreen/CriminalRecordScreen';
+import ForbiddenTravellerScreen from '../screens/MainTab/ForbiddenTraveller/ForbiddenTraveller';
+import Details from '../screens/MainTab/DetailsScreen/DetailsScreen';
+import ChangePasswordScreen from '../screens/MainTab/ChangePasswordScreen/ChangePasswordScreen';
+import AboutScreen from '../screens/MainTab/AboutScreen/AboutScreen';
 
 const HomeStack = createStackNavigator({
   home: HomeScreen,
   criminalRecord: CriminalRecordScreen,
   identity: IdentityScreen,
   forbiddenTraveller: ForbiddenTravellerScreen,
+  details: Details
 });
 
 HomeStack.navigationOptions = {
@@ -31,30 +31,23 @@ HomeStack.navigationOptions = {
       name={ Platform.OS === 'ios' ? 'ios-home' : 'md-home' }
     />
   ),
-  headerStyle: {
-    alignItems: 'center'
-  },
   headerTitleStyle: {
     fontFamily: 'Fjalla-one',
-    textAlignVertical: 'center'
   }
 };
 
-const StatsStack = createStackNavigator({
-  stats: StatsScreen,
+const AddStack = createStackNavigator({
+  Add : AddScreen,
 });
 
-StatsStack.navigationOptions = {
-  tabBarLabel: 'Stats',
+AddStack.navigationOptions = {
+  tabBarLabel: 'Add Person',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'md-stats' : 'md-stats'}
+      name={Platform.OS === 'ios' ? 'md-person' : 'md-person'}
     />
   ),
-  headerStyle: {
-    alignItems: 'center'
-  },
   headerTitleStyle: {
     fontFamily: 'Fjalla-one',
     textAlignVertical: 'center'
@@ -63,7 +56,7 @@ StatsStack.navigationOptions = {
 
 const IdentityStack = createStackNavigator({
   identity: IdentityScreen,
-  details: Details
+  details: Details,
 });
 
 IdentityStack.navigationOptions = {
@@ -74,12 +67,8 @@ IdentityStack.navigationOptions = {
       name={Platform.OS === 'ios' ? 'ios-search' : 'md-search'}
     />
   ), 
-  headerStyle: {
-    alignItems: 'center'
-  },
   headerTitleStyle: {
     fontFamily: 'Fjalla-one',
-    textAlignVertical: 'center'
   }
 };
 
@@ -99,25 +88,21 @@ ProfileStack.navigationOptions = {
       name={Platform.OS === 'ios' ? 'ios-person' : 'md-person'}
     />
   ),
-  headerStyle: {
-    alignItems: 'center'
-  },
   headerTitleStyle: {
     fontFamily: 'Fjalla-one',
-    textAlignVertical: 'center'
   }
 };
 
 export default createBottomTabNavigator(
   {
     HomeStack,
-    StatsStack,
+    AddStack,
     IdentityStack,
     ProfileStack
   },
   {
     tabBarOptions: {
-      activeTintColor: Colors.tintColor,
+      activeTintColor: theme.colors.tintColor,
     },
   }
 );
