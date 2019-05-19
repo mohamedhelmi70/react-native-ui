@@ -20,6 +20,8 @@ class AboutScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
+            errorMessage: null,
             controls: {
                 imagePicked: {
                     value: null,

@@ -1,30 +1,29 @@
 import React from 'react';
 import { 
-  View, 
-  StyleSheet, 
+  StyleSheet,
+  ActivityIndicator, 
   KeyboardAvoidingView, 
   Keyboard, 
   TouchableWithoutFeedback 
 } from 'react-native';
-import { connect } from 'react-redux';
-import { withNavigation } from 'react-navigation';
 import PropTypes from 'prop-types';
+import { NavigationActions } from 'react-navigation';
+import * as  theme  from '../../../constants/Theme/Theme';
+import { ButtonD, Block, Text} from '../../../components/UI/index';
+import Firebase from '../../../services/Firebase';
 
 import DefaultInput from '../../../components/UI/DefaultInput/DefaultInput';
-import CustomButton from '../../../components/UI/CustomButton/CustomButton';
-import HeadingText from '../../../components/UI/HeadingText/HeadingText';
-import MainText from '../../../components/UI/mainText/mainText';
 import Button from '../../../components/UI/Button/Button';
 import Logo from '../../../components/UI/Logo/Logo';
-
 import validate from '../../../utility/validation';
-import { login } from '../../../store/actions/index';
 
 class SignInScreen extends React.Component {
      
     constructor(props) {
       super(props);
       this.state = {
+        loading: false,
+        errorMessage: null,
         controls: {
           email: {
             value: "",
@@ -52,48 +51,47 @@ class SignInScreen extends React.Component {
 
     static propTypes = {
       navigation: PropTypes.object,
-      login: PropTypes.func,
       validate: PropTypes.func,
-      error: PropTypes.string,
     };
 
-    signInHandler = () => {
-      //const navAction = NavigationActions.reset({
-      // index: 0,
-      //  actoins: [
-      //    NavigationActions.navigate({routeName: 'home'})
-      //  ]
-      //});
-
-      //this.props.navigation.dispatch(navAction);
-      this.props.navigation.navigate('home');
-      //const email = this.state.controls.email.value;
-      //const password =   this.state.controls.password.value;
-      //this.props.login(email, password);
+    signInHandler = async () => {
+      const email = this.state.controls.email.value;
+      const password = this.state.controls.password.value;
+      this.setState({loading : true});
+      await Firebase
+        .auth()
+        .signInWithEmailAndPassword(
+          email,
+          password
+        )
+        .then(() => {
+          this.setState({loading : false}); 
+          this.props.navigation.navigate('home');  
+        })
+        .catch(error => {
+          if (error.message !== null) {
+            this.setState({ errorMessage: error.message, loading: false });
+            alert(error.message)
+          } else {
+            this.setState({ errorMessage: null });
+          }
+        });
     };
 
     startSignupScreen = () => {
-      /*const navAction = NavigationActions.reset({
+      const navActions = NavigationActions.reset({
         index: 0,
-        actoins: [
-          NavigationActions.navigate({routeName: 'signup'})
-        ]
+        actions: [NavigationActions.navigate({routeName: "signup"})]
       });
-
-      this.props.navigation.dispatch(navAction);*/
-      this.props.navigation.navigate('signup');
+      this.props.navigation.dispatch(navActions);
     };
 
     startForgetScreen = () => {
-      //const navAction = NavigationActions.reset({
-      //  index: 0,
-      //  actoins: [
-      //    NavigationActions.navigate({routeName: 'forgetpassword'})
-     //   ]
-     // });
-
-     // this.props.navigation.dispatch(navAction);
-      this.props.navigation.navigate('forgetpassword')
+      const navActions = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({routeName: "forgetpassword"})]
+      });
+      this.props.navigation.dispatch(navActions);
     }
 
     updateInputState = (key, value) => {
@@ -135,59 +133,60 @@ class SignInScreen extends React.Component {
 
       return (
       
-        <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
           
+          <Block padding={[0, theme.sizes.base * 2]}>
               
-                <View style={styles.viewflexStart}>
-
+              <Block left margin={[30 , 0]}>
+                  
                   <Logo />
 
-                  <HeadingText size={25} fontFamily='Fjalla-one'>Fingerprint Makes Life Easier</HeadingText>
-                
-                </View>
+                  <Text h2 semibold black>Fingerprint Makes Life Easier</Text>
+        
+              </Block>
                     
                 
-                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
-                  <View style={styles.viewCenter}>  
+                <Block center middle> 
 
                         
-                      <View style={styles.inputContainer}>
+                      <Block row space="between" margin={[5, 0]} style={styles.inputContainer}>
                               
-                              <DefaultInput 
-                                iconName='email'
-                                placeholder="Email"
-                                value={this.state.controls.email.value}
-                                onChangeText={(val) => this.updateInputState("email", val)}
-                                valid={this.state.controls.email.valid}
-                                touched={this.state.controls.email.touched}
-                                autoCapitalize='none'
-                                autoCorrect={false}
-                                placeholderTextColor="#5a6e65"
-                                keyboardType="email-address"
-                                textContentType='emailAddress'
-                              />
+                        <DefaultInput 
+                          iconName='email'
+                          placeholder="Email"
+                          value={this.state.controls.email.value}
+                          onChangeText={(val) => this.updateInputState("email", val)}
+                          valid={this.state.controls.email.valid}
+                          touched={this.state.controls.email.touched}
+                          autoCapitalize='none'
+                          autoCorrect={false}
+                          placeholderTextColor="#5a6e65"
+                          keyboardType="email-address"
+                          textContentType='emailAddress'
+                        />
 
-                      </View>
+                      </Block>
                           
-                      <View style={styles.inputContainer}>
-                              
-                              <DefaultInput 
-                                iconName='remove-red-eye'
-                                placeholder="Password"
-                                value={this.state.controls.password.value}
-                                onChangeText={val => this.updateInputState("password", val)}
-                                valid={this.state.controls.password.valid}
-                                touched={this.state.controls.password.touched}
-                                autoCorrect={false}
-                                placeholderTextColor="#5a6e65"
-                                secureTextEntry={true}
-                                textContentType='password'
-                              />
+                      <Block row space="between" margin={[5, 0]} style={styles.inputContainer}>
+                        
+                        <DefaultInput 
+                          iconName='remove-red-eye'
+                          placeholder="Password"
+                          value={this.state.controls.password.value}
+                          onChangeText={val => this.updateInputState("password", val)}
+                          valid={this.state.controls.password.valid}
+                          touched={this.state.controls.password.touched}
+                          autoCorrect={false}
+                          placeholderTextColor="#5a6e65"
+                          secureTextEntry={true}
+                          textContentType='password'
+                        />
 
-                      </View>
+                      </Block>
 
-                      <View style={styles.forgetView}>
+                      <Block left row>
 
                         <Button 
                           onPress={this.startForgetScreen} 
@@ -200,78 +199,53 @@ class SignInScreen extends React.Component {
                           marginL={5}
                         >Forget Password</Button>
                       
-                      </View>
+                      </Block>
 
-                      <View style={styles.bottom}>
-                              
-                              <CustomButton 
-                                  onPress={this.signInHandler} bgColor="#f6b810" 
-                                  size={20}
-                                  width={250}
-                                  disabled={ 
-                                    !this.state.controls.email.valid ||
-                                    !this.state.controls.password.valid 
-                                  }  
-                              >Login</CustomButton> 
-                              
-                              <View style={styles.signupcontainer}>
-                                
-                                  <MainText>Don’t have an account?</MainText> 
-                                    
-                                  <Button onPress={this.startSignupScreen} color="#f6b810" size={16} fWeight='bold' marginL={5} >Sign up</Button>  
-                              
-                              </View> 
+                      <Block center margin={[20, 0, 0, 0]}>
+
+                        <ButtonD gradient
+                          onPress={this.signInHandler} 
+                          disabled={ 
+                            !this.state.controls.email.valid ||
+                            !this.state.controls.password.valid 
+                          }  
+                        >
+                          {loading ?
+                            <ActivityIndicator size="small" color="white" /> :
+                            <Text bold black center>Log In</Text>
+                          }
                         
-                      </View> 
+                        </ButtonD>  
+                        
+                        <Block row space="between" margin={[10 , 0]}>
+                          
+                          <Text meduim> Don’t have an account ? </Text> 
+                            
+                          <Text onPress={this.startSignupScreen} meduim tintColor >Sign up</Text>  
+                        
+                        </Block> 
+                        
+                      </Block> 
 
-                    </View>
+                </Block>
                 
-              </TouchableWithoutFeedback>                                
-              
+            </TouchableWithoutFeedback>                                
+          
+          </Block>
+
         </KeyboardAvoidingView>
       );
     }
   }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#faf8fb',
-      justifyContent: 'center',     
-      padding: 8,
-    },
-    viewflexStart: {
-      alignItems: 'flex-start',
-      marginBottom: 40
-    },
-    viewCenter: {
-      alignItems: 'center'
-    },
-    inputContainer: {
-      width: "80%",
-    },
-    forgetView: {
-      flexDirection: 'row',
-      alignItems: 'flex-start',
-      width: '80%',
-    },
-    bottom: {
-      alignItems: 'center',
-      marginTop: 20
-    },
-    signupcontainer: {
-      flexDirection: 'row', 
-      justifyContent: 'center',
-      alignItems: 'baseline',
-    },
+  container: {
+    flex: 1,
+    backgroundColor: '#faf8fb',
+  },
+  inputContainer: {
+    width: "80%",
+  },
 });
 
-const mapStateToProps = state => ({
-  error: state.auth.error,
-});
-
-const mapDispatchToProps = {
-  login, 
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(SignInScreen));
+export default SignInScreen;

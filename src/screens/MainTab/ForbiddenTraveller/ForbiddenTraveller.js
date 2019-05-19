@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { View, StyleSheet} from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import PropTypes from 'prop-types';
+import * as  theme  from '../../../constants/Theme/Theme';
+import { ButtonD, Block } from '../../../components/UI/Index';
 
-import CustomButton from '../../../components/UI/CustomButton/CustomButton';
 import PickImage from '../../../components/PickImage/PickImage';
 import LogoTitle from '../../../components/UI/LogoTitle/LogoTitle';
+
 
 class IdentityScreen extends Component {
     
@@ -16,7 +18,8 @@ class IdentityScreen extends Component {
                     value: null,
                     valid: false
                 },
-            }
+            },
+            loading: false
         };
     };
 
@@ -48,35 +51,29 @@ class IdentityScreen extends Component {
     render() {
        
         return (
-            <View style={styles.container}>
+
+            <Block>
+
+                <Block margin={[0, theme.sizes.base * 2, 40]} middle center shadow>
+                    <PickImage text="Capture your fingerprint By Camera" wth={'80%'} hht={150} onImagePicked={this.pickFingerprintHandler} />
+                </Block>
                 
-              
-                <PickImage text="Capture your fingerprint By Camera" wth={'80%'} hht={150} onImagePicked={this.pickFingerprintHandler} />
-                    
-                <CustomButton 
+                <ButtonD gradient
                     onPress={this.checkTravellerHandler} 
-                    bgColor="#f6b810"  
-                    size={20} 
-                    width={250}
                     disabled={
                         !this.state.controls.fingerprintPicked.valid 
                     }
-                >Check</CustomButton>
+                >
+                    {loading ?
+                        <ActivityIndicator size="small" color="white" /> :
+                        <Text bold black center> Check </Text>
+                    }
+                </ButtonD>      
 
-            </View>
+            </Block>
        );
     }
 
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 10,
-        backgroundColor: '#faf8fb' 
-    },
-});
 
 export default IdentityScreen;

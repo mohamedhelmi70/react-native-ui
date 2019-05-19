@@ -1,4 +1,6 @@
-import * as FirebaseModule from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/database';
+import 'firebase/auth';
 import firebaseConfig from '../config/Firebase';
 
 const {
@@ -9,8 +11,6 @@ const {
   messagingSenderId,
 } = firebaseConfig;
 
-let firebaseInitialized = false;
-
 if (
   apiKey !== 'null' &&
   authDomain !== 'null' &&
@@ -18,18 +18,16 @@ if (
   storageBucket !== 'null' &&
   messagingSenderId !== 'null'
 ) {
-  FirebaseModule.initializeApp({
+  firebase.initializeApp({
     apiKey,
     authDomain,
     databaseURL,
     storageBucket,
     messagingSenderId,
   });
-
-  firebaseInitialized = true;
 }
 
-export const FirebaseRef = firebaseInitialized
-  ? FirebaseModule.database().ref()
-  : null;
-export const Firebase = firebaseInitialized ? FirebaseModule : null;
+export const provider = new firebase.auth.GoogleAuthProvider();
+export const auth = firebase.auth();
+
+export default firebase;

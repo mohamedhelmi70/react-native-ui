@@ -19,6 +19,7 @@
     "prop-types": "^15.7.2",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-32.0.0.tar.gz",
+    "react-native-camera": "^2.9.0",
     "react-native-easy-grid": "^0.2.1",
     "react-navigation": "^3.5.1",
     "react-navigation-redux-helpers": "^3.0.0",

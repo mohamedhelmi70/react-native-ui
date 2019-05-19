@@ -1,31 +1,37 @@
 import React, {Component} from 'react';
 import { 
-    View, 
-    StyleSheet,
-    TouchableWithoutFeedback,
-    Keyboard,
-    KeyboardAvoidingView, 
+  StyleSheet,
+  ActivityIndicator,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView, 
 } from 'react-native';
-import { connect } from 'react-redux';
-import { withNavigation } from 'react-navigation';
 import PropTypes from 'prop-types';
+import { NavigationActions } from 'react-navigation';
+import * as  theme  from '../../../constants/Theme/Theme';
+import { ButtonD, Block, Text} from '../../../components/UI/index';
+import Firebase from '../../../services/Firebase';
 
 import DefaultInput from '../../../components/UI/DefaultInput/DefaultInput';
-import HeadingText from '../../../components/UI/HeadingText/HeadingText'
-import CustomButton from '../../../components/UI/CustomButton/CustomButton';
-import MainText from '../../../components/UI/mainText/mainText';
-import Button from '../../../components/UI/Button/Button';
 import Logo from '../../../components/UI/Logo/Logo';
-
 import validate from '../../../utility/validation';
-import { signUp } from '../../../store/actions/index';
 
 class SignupScreen extends Component {
     
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
+            errorMessage: null,
             controls: {
+                name: {
+                  value: "",
+                  valid: false,
+                  validationRules: {
+                    menLength: 6
+                  },
+                  touched: false
+                },  
                 email: {
                     value: "",
                     valid: false,
@@ -50,7 +56,7 @@ class SignupScreen extends Component {
                     },
                     touched: false
                 }
-            }
+            },
         };
     }
 
@@ -60,27 +66,47 @@ class SignupScreen extends Component {
 
     static propTypes = {
         navigation: PropTypes.object,
-        signUp: PropTypes.func,
         validate: PropTypes.func,
-        error: PropTypes.string,
+    };
+
+    signupUser = async (userName) => {
+      await Firebase.auth().onAuthStateChanged( FBUser => {
+        FBUser.updateProfile({
+          name: userName
+        }).then(() => {
+          this.setState({loading : false});
+          this.props.navigation.navigate('home');     
+        });
+      });
     };
 
     signupHandler = async () => {
-        const  email = this.state.controls.email.value;
-        const  password = this.state.controls.password.value;
-        await this.props.signUp(email, password);
+      const  name = this.state.controls.name.value;
+      const  email = this.state.controls.email.value;
+      const  password = this.state.controls.password.value;
+      this.setState({loading : true});
+      await firebase
+        .auth()
+        .createUserWithEmailAndPassword( email, password )
+        .then(() => {
+          this.signupUser( name );
+        })
+        .catch(error => {
+          if (error.message !== null) {
+            this.setState({ errorMessage: error.message, loading: false});
+          } else {
+            this.setState({ errorMessage: null });
+          }
+      });
     };
 
+
     startLoginScreen = () => {
-       /* const navAction = NavigationActions.reset({
-            index: 0,
-            actoins: [
-              NavigationActions.navigate({routeName: 'login'})
-            ]
-          });
-    
-        this.props.navigation.dispatch(navAction); */
-        this.props.navigation.navigate('login');
+      const navActions = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({routeName: "login"})]
+      });
+      this.props.navigation.dispatch(navActions);
     };
       
     updateInputState = (key, value) => {
@@ -133,97 +159,124 @@ class SignupScreen extends Component {
     render (){
         
         return (
-            <KeyboardAvoidingView style={styles.Container}  behavior="padding" enabled>
-                
-                    <View style={styles.viewflexStart}>
+            <KeyboardAvoidingView style={styles.Container}  behavior="padding">
+
+                <Block padding={[0, theme.sizes.base * 2]}>
+
+                    <Block left margin={[30 , 0]}>
                       
                       <Logo />
-
-                      <HeadingText size={35} fontFamily='Fjalla-one'>Fingerprint Makes Life Easier</HeadingText>
+ 
+                      <Text h2 semibold black>Fingerprint Makes Life Easier</Text>
              
-                    </View>
+                    </Block>
                     
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
 
- 
-                        <View style={styles.viewCenter}>
-                        
-                            <View style={styles.inputContainer}>
-                                <DefaultInput 
-                                   iconName='email'
-                                    placeholder="Email"
-                                    style={styles.input}
-                                    value={this.state.controls.email.value}
-                                    onChangeText={(val) => this.updateInputState("email", val)}
-                                    valid={this.state.controls.email.valid}
-                                    touched={this.state.controls.email.touched}
-                                    autoCapitalize='none'
+                      <Block center middle>
+
+                            <Block Block row space="between" margin={[5, 0]} style={styles.inputContainer}>  
+                              <DefaultInput 
+                                    iconName='person'
+                                    placeholder="Full Name"
+                                    value={this.state.controls.name.value}
+                                    onChangeText={(val) => this.updateInputState('name', val)}
                                     autoCorrect={false}
+                                    valid={this.state.controls.name.valid}
+                                    touched={this.state.controls.name.touch}
                                     placeholderTextColor="#5a6e65"
-                                    keyboardType="email-address"
-                                    textContentType='emailAddress'
-                                />
-                            </View>
+                                    textContentType='name'
+                                /> 
+                            </Block>
+
+                            <Block Block row space="between" margin={[5, 0]} style={styles.inputContainer}>
+                                
+                              <DefaultInput 
+                                  iconName='email'
+                                  placeholder="Email"
+                                  style={styles.input}
+                                  value={this.state.controls.email.value}
+                                  onChangeText={(val) => this.updateInputState("email", val)}
+                                  valid={this.state.controls.email.valid}
+                                  touched={this.state.controls.email.touched}
+                                  autoCapitalize='none'
+                                  autoCorrect={false}
+                                  placeholderTextColor="#5a6e65"
+                                  keyboardType="email-address"
+                                  textContentType='emailAddress'
+                              />
+
+                            </Block>
                             
-                            <View style={styles.inputContainer}>
-                                <DefaultInput 
-                                    iconName='remove-red-eye'
-                                    placeholder="Password"
-                                    style={styles.input}
-                                    value={this.state.controls.password.value}
-                                    onChangeText={val => this.updateInputState("password", val)}
-                                    valid={this.state.controls.password.valid}
-                                    touched={this.state.controls.password.touched}
-                                    autoCorrect={false}
-                                    placeholderTextColor="#5a6e65"
-                                    secureTextEntry={true}
-                                    textContentType='password'
-                                />
-                            </View>
-                            <View style={styles.inputContainer}>
-                                <DefaultInput 
-                                    iconName='remove-red-eye'
-                                    placeholder="Confirm Password"
-                                    style={styles.input}
-                                    value={this.state.controls.confirmPassword.value}
-                                    onChangeText={val => this.updateInputState("confirmPassword", val)}
-                                    valid={this.state.controls.confirmPassword.valid}
-                                    touched={this.state.controls.confirmPassword.touched}
-                                    autoCorrect={false}
-                                    placeholderTextColor="#5a6e65"
-                                    secureTextEntry={true}
-                                    textContentType='password'
-                                />
-                            </View>
+                            <Block row space="between" margin={[5, 0]} style={styles.inputContainer}>
+                              
+                              <DefaultInput 
+                                  iconName='remove-red-eye'
+                                  placeholder="Password"
+                                  style={styles.input}
+                                  value={this.state.controls.password.value}
+                                  onChangeText={val => this.updateInputState("password", val)}
+                                  valid={this.state.controls.password.valid}
+                                  touched={this.state.controls.password.touched}
+                                  autoCorrect={false}
+                                  placeholderTextColor="#5a6e65"
+                                  secureTextEntry={true}
+                                  textContentType='password'
+                              />
+
+                            </Block>
                             
-                            <View style={styles.bottom}>
+                            <Block row space="between" margin={[5, 0]} style={styles.inputContainer}>
+                            
+                              <DefaultInput 
+                                  iconName='remove-red-eye'
+                                  placeholder="Confirm Password"
+                                  style={styles.input}
+                                  value={this.state.controls.confirmPassword.value}
+                                  onChangeText={val => this.updateInputState("confirmPassword", val)}
+                                  valid={this.state.controls.confirmPassword.valid}
+                                  touched={this.state.controls.confirmPassword.touched}
+                                  autoCorrect={false}
+                                  placeholderTextColor="#5a6e65"
+                                  secureTextEntry={true}
+                                  textContentType='password'
+                              />
+                            
+                            </Block>
+                            
+                            <Block center style={styles.bottom}>
                                    
-                                    <CustomButton 
+                                    <ButtonD gradient
                                         onPress={this.signupHandler} 
-                                        bgColor="#f6b810" 
-                                        size={20}
-                                        width={250}
                                         disabled={
                                             !this.state.controls.confirmPassword.valid ||
                                             !this.state.controls.email.valid ||
                                             !this.state.controls.password.valid
                                         }
-                                    >Sign up</CustomButton>
+                                    >
+                                      {loading ?
+                                        <ActivityIndicator size="small" color="black" /> :
+                                        <Text bold black center>Sign Up</Text>
+                                      }
                                     
-                                    <View style={styles.logincontainer}>
+                                    </ButtonD>
                                     
-                                        <MainText>If you have an account ?</MainText>
-                    
-                                        <Button onPress={this.startLoginScreen} color="#f6b810" marginL={5} size={16}>Login</Button>      
+                                    <Block row space="between" margin={[10 , 0]}>
+                                    
+                                      <Text black meduim > If you have an account ? </Text>
+                  
+                                      <Text meduim tintColor onPress={this.startLoginScreen}>Log In</Text>      
                                         
-                                    </View>                    
+                                    </Block>                    
                             
-                            </View>
+                            </Block>
                         
-                        </View>
+                        </Block>
 
                     </TouchableWithoutFeedback>   
-                                
+
+                </Block>                
+
             </KeyboardAvoidingView>
 
         );
@@ -232,42 +285,16 @@ class SignupScreen extends Component {
 
 const styles = StyleSheet.create({
     Container: {
-       flex: 1,
-       backgroundColor: '#faf8fb',
-       justifyContent: 'center',
-       padding: 8 
-    },
-    viewCenter: {
-       alignItems: 'center'
-    },
-    viewflexStart: {
-       alignItems: 'flex-start',
-       marginBottom: 40
+      flex: 1,
+      backgroundColor: '#faf8fb',
     },
     inputContainer: {
-        width: "80%"
+      width: "80%"
     },
     input: {
-        backgroundColor: "#eee",
-        borderColor: "#bbb"
+      backgroundColor: "#eee",
+      borderColor: "#bbb"
     },
-    bottom: {
-        alignItems: 'center',
-        marginTop: 20
-    },
-    logincontainer: {
-       flexDirection: 'row',
-       alignItems: 'baseline',
-       justifyContent: 'center'
-    }
 });
 
-const mapStateToProps = state => ({
-    error: state.auth.error,
-});
-
-const mapDispatchToProps = {
-    signUp,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(withNavigation(SignupScreen));
+export default SignupScreen;

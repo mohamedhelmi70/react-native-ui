@@ -1,17 +1,15 @@
 import React from 'react';
-import { AppLoading, Asset, Font, Icon } from 'expo';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/lib/integration/react';
-import createStore from './src/store';
+import { StyleSheet , View} from 'react-navtive';
+import { AppLoading, Font, Icon } from 'expo';
 import AppNavigator from './src/navigation/AppNavigator';
-import NavigationService from './src/services/NavigationService';
-
-const { store, persistor } = createStore();
 
 export default class App extends React.Component {
-  state = {
-    isLoadingComplete: false,
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+      isLoadingComplete: false,
+    };
+  }
 
   render() {
 
@@ -25,15 +23,9 @@ export default class App extends React.Component {
       );
     } else {
       return (
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <AppNavigator
-              ref={navigatorRef => {
-                NavigationService.setTopLevelNavigator(navigatorRef);
-              }}
-            />
-          </PersistGate>
-        </Provider>
+        <View style={styles.container}>
+            <AppNavigator />
+        </View>
       );
     }
   }
@@ -62,3 +54,10 @@ export default class App extends React.Component {
     this.setState({ isLoadingComplete: true });
   };
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  }  
+})

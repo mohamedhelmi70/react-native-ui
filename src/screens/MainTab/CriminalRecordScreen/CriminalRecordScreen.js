@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import {View, StyleSheet} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import PropTypes from 'prop-types';
+import * as  theme  from '../../../constants/Theme/Theme';
+import { ButtonD, Block } from '../../../components/UI/Index';
 
 import PickImage from '../../../components/PickImage/PickImage';
-import CustomButton from '../../../components/UI/CustomButton/CustomButton';
 import LogoTitle from '../../../components/UI/LogoTitle/LogoTitle';
 
 class CriminalRecordScreen extends Component {
@@ -11,6 +12,7 @@ class CriminalRecordScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            loading: false,
             controls: {
                 criminalRecordImage: {
                     value: null,
@@ -50,34 +52,28 @@ class CriminalRecordScreen extends Component {
     render() {
         
         return (
-           <View style={styles.container}>
-               
-               <PickImage onImagePicked={this.criminalRecordPickedHandler} />
-               
-               <CustomButton 
-                    onPress={this.criminalCheckHandler} 
-                    bgColor="#f6b810"
-                    width={250}  
-                    size={20} 
+            <Block>     
+                <Block margin={[0, theme.sizes.base * 2 , 40]} middle center shadow>
+                        <PickImage text="Capture your fingerprint By Camera" wth={'80%'} hht={150} onImagePicked={this.criminalRecordPickedHandler} />
+                </Block>
+                
+                <ButtonD gradient 
+                    onPress={this.criminalCheckHandler}  
                     disabled={
                         !this.state.controls.criminalRecordImage.valid 
                     }
-                >Check</CustomButton>
+                >
+                    {loading ?
+                        <ActivityIndicator size="small" color="white" /> :
+                        <Text bold black center> Check </Text>
+                    }                 
+                </ButtonD>
+           </Block>
 
-           </View>
+               
        );
     } 
 
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 20,
-        backgroundColor: '#edf1f3' 
-    }, 
-});
 
 export default CriminalRecordScreen;

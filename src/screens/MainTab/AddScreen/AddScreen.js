@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import {
   StyleSheet, 
-  View, 
   ScrollView, 
   KeyboardAvoidingView, 
-  TouchableWithoutFeedback, 
-  Keyboard 
+  ActivityIndicator
 } from 'react-native';
 import PropTypes from 'prop-types';
+import * as  theme  from '../../../constants/Theme/Theme';
+import { Divider, ButtonD, Block, Text, Switch } from '../../../components/UI/index';
 
 import PickImage from '../../../components/PickImage/PickImage';
 import DefaultInput from '../../../components/UI/DefaultInput/DefaultInput';
-import CustomButton from '../../../components/UI/CustomButton/CustomButton';
 import validate from '../../../utility/validation';
 import LogoTitle from '../../../components/UI/LogoTitle/LogoTitle';
 import PickRecord from '../../../components/PickRecord/PickRecord';
@@ -19,7 +18,9 @@ import PickRecord from '../../../components/PickRecord/PickRecord';
 class AddScreen extends Component {
     
     constructor(props) {
+        
         super(props);
+
         this.state = {
             controls: {
                 imagePicked: {
@@ -65,8 +66,13 @@ class AddScreen extends Component {
                         isAddress: true
                     },
                     touched: false
-                }
-            }
+                },
+                A : false,
+                B : false,
+                C : false,
+                D : false,
+            },
+            loading: false,
         }
     };
 
@@ -134,9 +140,11 @@ class AddScreen extends Component {
     render() {
         return (
 
-            <KeyboardAvoidingView style={styles.container} behavior="padding">
+          <KeyboardAvoidingView style={styles.addPerson} behavior="padding">
+            
+            <Block padding={[0, theme.sizes.base * 2]}> 
                 
-                <ScrollView style={{flex: 1}}>
+                <ScrollView showsVerticalScrollIndicator={false}>
 
                     <PickImage text="Capture image of your fingerprint" wth={'80%'} hht={150} onImagePicked={this.pickFingerprintHandler} />
 
@@ -144,133 +152,183 @@ class AddScreen extends Component {
                     
                     <PickRecord />
 
-                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <Divider />
                     
-                        <View style={styles.viewFlexStart}>
-                                
-                                <View style={styles.item}>
-                                      
-                                    <DefaultInput 
-                                      iconName='person'
-                                      placeholder="ex: Mo Helmi"
-                                      value={this.state.controls.name.value}
-                                      onChangeText={(val) => this.updateInputState('name', val)}
-                                      autoCorrect={false}
-                                      valid={this.state.controls.name.valid}
-                                      touched={this.state.controls.name.touch}
-                                      placeholderTextColor="#5a6e65"
-                                      textContentType='name'
-                                    />  
-                                </View>
-                                
-                                <View style={styles.item}>
-                              
-                                    <DefaultInput 
-                                        iconName='today'
-                                        placeholder="ex: 25-05-1997"
-                                        value={this.state.controls.birthDate.value}
-                                        onChangeText={(val) => this.updateInputState('birthDate', val)}
-                                        autoCorrect={false}
-                                        valid={this.state.controls.birthDate.valid}
-                                        touched={this.state.controls.birthDate.touch}
-                                        placeholderTextColor="#5a6e65"                                
-                                    />
-                                
-                                </View>
-                                
-                                <View style={styles.item}>
-                                
- 
-                                    <DefaultInput 
-                                        iconName='email'
-                                        placeholder="ex: moh1253@examle.com"
-                                        value={this.state.controls.email.value}
-                                        onChangeText={(val) => this.updateInputState('email', val)}
-                                        autoCorrect={false}
-                                        valid={this.state.controls.email.valid}
-                                        touched={this.state.controls.email.touch}
-                                        placeholderTextColor="#5a6e65"
-                                    />
+                    <Block style={styles.inputs}>
+                      
+                      <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
 
-                                </View>
-
-                                <View style={styles.item}>
-                                 
-                                    <DefaultInput 
-                                        iconName='phone-android'
-                                        placeholder='ex: +1029524141'
-                                        value={this.state.controls.phone.value}
-                                        onChangeText={(val) => this.updateInputState('phone', val)}
-                                        autoCorrect={false}
-                                        valid={this.state.controls.phone.valid}
-                                        touched={this.state.controls.phone.touch}
-                                        placeholderTextColor="#5a6e65"
-                                    />
-
-                                </View>
-
-                                <View style={styles.item}>
-                                
-                                    <DefaultInput 
-                                        iconName='my-location'
-                                        placeholder='ex: st 15 cairo egypt'
-                                        value={this.state.controls.address.value}
-                                        onChangeText={(val) => this.updateInputState('address', val)}
-                                        autoCorrect={false}
-                                        valid={this.state.controls.address.valid}
-                                        touched={this.state.controls.address.touch}
-                                        placeholderTextColor="#5a6e65"
-                                    />
-
-                                </View>
+                          <Block>
+                            <Text gray2 style={{ marginBottom: 10 }}>Person</Text>
+                          </Block>
                         
-                            <View style={{marginTop: 10}}>
+                          <DefaultInput 
+                              iconName='person'
+                              placeholder="ex: Mo Helmi"
+                              value={this.state.controls.name.value}
+                              onChangeText={(val) => this.updateInputState('name', val)}
+                              autoCorrect={false}
+                              valid={this.state.controls.name.valid}
+                              touched={this.state.controls.name.touch}
+                              placeholderTextColor="#5a6e65"
+                              textContentType='name'
+                          />
+                      </Block>
 
-                                <CustomButton 
-                                    onPress={this.addPersonHandler} 
-                                    bgColor='#f6b810' 
-                                    size={20} 
-                                    width={250}
-                                    disabled={ 
-                                      !this.state.controls.email.valid &&
-                                      !this.state.controls.name.valid &&
-                                      !this.state.controls.phone.valid &&
-                                      !this.state.controls.birthDate.valid &&
-                                      !this.state.controls.address.valid &&
-                                      !this.state.controls.imagePicked.valid &&
-                                      !this.state.controls.fingerprintPicked
-                                    }  
-                                >
-                                  Add Person
-                                </CustomButton>
+                      <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
+                          <Block>
+                            <Text gray2 style={{ marginBottom: 10 }}>Phone</Text>
+                          </Block>
+                        
+                          <DefaultInput 
+                              iconName='phone-android'
+                              placeholder='ex: +1029524141'
+                              value={this.state.controls.phone.value}
+                              onChangeText={(val) => this.updateInputState('phone', val)}
+                              autoCorrect={false}
+                              valid={this.state.controls.phone.valid}
+                              touched={this.state.controls.phone.touch}
+                              placeholderTextColor="#5a6e65"
+                          />
+                      </Block>
 
-                            </View>        
-                    
-                        </View>
-                    
-                    </TouchableWithoutFeedback>    
+                      <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
+                          <Block>
+                            <Text gray2 style={{ marginBottom: 10 }}>Address</Text>
+                          </Block>
+                        
+                          <DefaultInput 
+                              iconName='my-location'
+                              placeholder='ex: st 15 cairo egypt'
+                              value={this.state.controls.address.value}
+                              onChangeText={(val) => this.updateInputState('address', val)}
+                              autoCorrect={false}
+                              valid={this.state.controls.address.valid}
+                              touched={this.state.controls.address.touch}
+                              placeholderTextColor="#5a6e65"
+                          />
+
+                      </Block>
+
+                      <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
+                          <Block>
+                            <Text gray2 style={{ marginBottom: 10 }}>Person</Text>
+                          </Block>
+                        
+                          <DefaultInput 
+                              iconName='person'
+                              placeholder="ex: Mo Helmi"
+                              value={this.state.controls.name.value}
+                              onChangeText={(val) => this.updateInputState('name', val)}
+                              autoCorrect={false}
+                              valid={this.state.controls.name.valid}
+                              touched={this.state.controls.name.touch}
+                              placeholderTextColor="#5a6e65"
+                              textContentType='name'
+                          />
+                      </Block>
+
+                      <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
+                          <Block>
+                            <Text gray2 style={{ marginBottom: 10 }}>Person</Text>
+                          </Block>
+                        
+                          <DefaultInput 
+                              iconName='person'
+                              placeholder="ex: Mo Helmi"
+                              value={this.state.controls.name.value}
+                              onChangeText={(val) => this.updateInputState('name', val)}
+                              autoCorrect={false}
+                              valid={this.state.controls.name.valid}
+                              touched={this.state.controls.name.touch}
+                              placeholderTextColor="#5a6e65"
+                              textContentType='name'
+                          />
+                      </Block> 
+                     
+                    </Block>
+
+                    <Divider />
+
+                    <Block style={styles.toggles}>
+                      
+                      <Block row center space="between" style={{ marginBottom: theme.sizes.base * 2 }}>
+                        <Text gray2>A</Text>
+                        <Switch
+                          value={this.state.notifications}
+                          onValueChange={value => this.setState({ A : value })}
+                        />
+                      </Block>
+                      
+                      <Block row center space="between" style={{ marginBottom: theme.sizes.base * 2 }}>
+                        <Text gray2>B</Text>
+                        <Switch
+                          value={this.state.newsletter}
+                          onValueChange={value => this.setState({ B : value })}
+                        />
+                      </Block>
+
+                      <Block row center space="between" style={{ marginBottom: theme.sizes.base * 2 }}>
+                        <Text gray2>C</Text>
+                        <Switch
+                          value={this.state.newsletter}
+                          onValueChange={value => this.setState({ C : value })}
+                        />
+                      </Block>
+
+                      <Block row center space="between" style={{ marginBottom: theme.sizes.base * 2 }}>
+                        <Text gray2>D</Text>
+                        <Switch
+                          value={this.state.newsletter}
+                          onValueChange={value => this.setState({ D : value })}
+                        />
+                      </Block>
+
+                    </Block> 
+                          
+                    <ButtonD gradient
+                            onPress={this.addPersonHandler} 
+                            
+                            disabled={ 
+                              !this.state.controls.email.valid &&
+                              !this.state.controls.name.valid &&
+                              !this.state.controls.phone.valid &&
+                              !this.state.controls.birthDate.valid &&
+                              !this.state.controls.address.valid &&
+                              !this.state.controls.imagePicked.valid &&
+                              !this.state.controls.fingerprintPicked
+                            }
+                        >
+                            {loading ?
+                                <ActivityIndicator size="small" color="white" /> :
+                                <Text bold black center>Add Person</Text>
+                            }
+                    </ButtonD>        
                 
                 </ScrollView>
-            
-            </KeyboardAvoidingView>   
+          
+            </Block>   
+          
+          </KeyboardAvoidingView>
         ); 
     }
 
 }
 
 const styles = StyleSheet.create({
-    container: {
+    addPerson: {
       flex: 1,
-      backgroundColor: '#faf8fb',
-      padding: 10
+      justifyContent: 'center',
     },
-    viewFlexStart: {
-      alignItems: 'center',
-      width: '100%'
+    inputs: {
+      marginTop: theme.sizes.base * 0.7,
+      paddingHorizontal: theme.sizes.base * 2,
     },
-    item: {
-      margin: 10,
-      width: "80%"
+    inputRow: {
+      alignItems: 'flex-end'
+    },
+    toggles: {
+      paddingHorizontal: theme.sizes.base * 2,
     },
 });
 

@@ -1,15 +1,12 @@
 import React from 'react';
-import { View, StyleSheet} from 'react-native'; 
+import { StyleSheet } from 'react-native'; 
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { withNavigation } from 'react-navigation';
+import * as  theme  from '../../../constants/Theme/Theme';
+import { Block, Text } from '../../../components/UI/index';
 
 import Image from '../../../components/UI/Image/Image';
-import Button from '../../../components/UI/Button/Button';
 import Icon from '../../../components/TabBarIcon/TabBarIcon';
-import MainText from '../../../components/UI/mainText/mainText';
-import { logout } from '../../../store/actions/auth';
-import { height } from '../../../constants/Layout/Layout';
+import Firebase from '../../../config/Firebase';
 
 class ProfileScreen extends React.Component {
   
@@ -26,140 +23,90 @@ class ProfileScreen extends React.Component {
 
   static propTypes = {
     navigation: PropTypes.object,
-    logout: PropTypes.func
   };
   
   signoutHandler = async () => {
-    await this.props.logout();
+    await Firebase.auth().signOut().then(() => { this.props.navigation.navigate('login') } );
   }
 
   render() {
     
     return (
       
-      <View style={styles.Container}>
+      <Block>
           
-          <View style={styles.viewFlexStart}>
-             
-            <View style={styles.header}>
-              
-              <View style={styles.avatarHeader}>
-              
-                <Image image={null} />
-              
-              </View>  
-                  
-              <View style={styles.headerSubItem}>
-                
-                <MainText moreStyle={{fontSize: 19, fontFamily: 'Fjalla-one', color: '#2e3131'}}> {this.state.name} </MainText>
-               
-              </View>
-                
-            </View>
-            
-            <View style={styles.bodyContainer}>
-              
-              <View style={styles.item}>
-
-                <Icon name='md-home' size={17} focused={true} /> 
-              
-                <Button size={17} marginL={15} onPress={() => this.props.navigation.navigate('home')} >Home</Button>
-              
-              </View>
-
-              <View style={styles.item}>
-                 
-                <Icon name='md-settings' size={17} focused={true} />
-              
-                <Button size={17} marginL={15} onPress={() => this.props.navigation.navigate('about')} >About</Button>
-              
-              </View>
-
-              <View style={styles.item}>
-                 
-                <Icon name='md-lock' size={17} focused={true} /> 
-               
-                <Button size={17} marginL={15} onPress={() => this.props.navigation.navigate('changePass')} >Change Password</Button>
-               
-              </View>
-
-              <View style={styles.item}>
-                 
-                <Icon name='md-help-circle' size={17} focused={true} />
-              
-                <Button size={17} marginL={15} onPress={() => alert('Help')} >Help</Button>
-               
-              </View>
-
-              <View style={styles.item}>
-              
-                <Icon name='md-log-out' size={17} focused={true} /> 
-              
-                <Button size={17} marginL={15} onPress={this.signoutHandler} >Logout</Button>
-              
-              </View>
-            
-            </View>
+        <Block flex={false} row center space="between" style={styles.header}>
           
-          </View>
+          <Text h2 bold> { this.state.name } </Text>
+          
+          <Image image={null} style={styles.avatar} />
+        
+        </Block>
+            
+          <Block style={styles.bodyContainer}>
+              
+            <Block row space="between" margin={[10, 0]} style={styles.item}>
+
+              <Icon name='md-home' size={17} focused={true} /> 
+                
+              <Text medium secondary onPress={() => this.props.navigation.navigate('home')} > Home </Text>
+            
+            </Block>
+
+            <Block row space="between" margin={[10, 0]} style={styles.item}>
+                 
+              <Icon name='md-settings' size={17} focused={true} />
+              
+              <Text medium secondary onPress={() => this.props.navigation.navigate('about')} > About </Text>
+              
+            </Block>
+
+            <Block row space="between" margin={[10, 0]} style={styles.item}>
+                
+              <Icon name='md-lock' size={17} focused={true} /> 
+              
+              <Text medium secondary onPress={() => this.props.navigation.navigate('changePass')} >Change Password</Text>
+              
+            </Block>
+
+            <Block row space="between" margin={[10, 0]} style={styles.item}>
+                
+              <Icon name='md-help-circle' size={17} focused={true} />
+            
+              <Text medium secondary onPress={() => alert('Help')} > Help </Text>
+              
+            </Block>
+
+            <Block row space="between" margin={[10, 0]} style={styles.item}>
+            
+              <Icon name='md-log-out' size={17} focused={true} /> 
+            
+              <Text medium secondary onPress={this.signoutHandler} > Log Out </Text>
+            
+            </Block>
+            
+          </Block>
       
-      </View>
+      </Block>
     );
   }
 }
 
 const styles =StyleSheet.create({
-  Container: {
-    flex: 1,
-    backgroundColor: '#faf8fb',
-    padding: 10,
+  header: {
+    paddingHorizontal: theme.sizes.base * 2,
   },
-  header:{
-    marginTop: 15,
-    marginBottom: 5,
-    flexDirection: 'row',
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    height: 150,
-    width: '100%',
-    borderRadius: 10
-  },
-  avatarHeader: {
-    borderColor: '#000',
-    borderStyle: 'dashed',
-    borderWidth: .5,
-    borderRadius: 30,
-    padding: 2, 
-    marginLeft: 5,
-  },
-  headerSubItem: {
-    marginLeft: 15
+  avatar: {
+    height: theme.sizes.base * 2.2,
+    width: theme.sizes.base * 2.2,
   },
   bodyContainer: {
-    alignItems: 'flex-start',
-    backgroundColor: '#fff',
-    paddingTop: 10,
-    paddingBottom: 20,
-    height: height - 150,
-    width: '100%',
+    marginTop: theme.sizes.base * 0.7,
+    paddingHorizontal: theme.sizes.base * 2,
   },
   item: {
-    borderBottomColor: '#000',
-    borderStyle: 'solid',
-    borderBottomWidth: .3,
-    padding: 10,
-    paddingBottom: 12,
-    flexDirection: 'row',
-    alignItems: 'baseline',
-    width: '95%',
-    marginTop: 10,
-    marginLeft: 5
-
+    alignItems: 'flex-end'
   }
 });
 
-const mapDispatchToProps = {
-  logout,
-};
-
-export default connect(null, mapDispatchToProps)(withNavigation(ProfileScreen));
+export default ProfileScreen;
