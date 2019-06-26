@@ -1,18 +1,19 @@
 import React, {Component} from 'react';
 import { 
+  View,
   StyleSheet,
-  ActivityIndicator,
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView, 
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { NavigationActions } from 'react-navigation';
-import * as  theme  from '../../../constants/Theme/Theme';
-import { ButtonD, Block, Text} from '../../../components/UI/index';
 import Firebase from '../../../services/Firebase';
 
 import DefaultInput from '../../../components/UI/DefaultInput/DefaultInput';
+import HeadingText from '../../../components/UI/HeadingText/HeadingText'
+import CustomButton from '../../../components/UI/CustomButton/CustomButton';
+import MainText from '../../../components/UI/mainText/mainText';
+import Button from '../../../components/UI/Button/Button';
 import Logo from '../../../components/UI/Logo/Logo';
 import validate from '../../../utility/validation';
 
@@ -21,8 +22,6 @@ class SignupScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
-            errorMessage: null,
             controls: {
                 name: {
                   value: "",
@@ -70,22 +69,15 @@ class SignupScreen extends Component {
     };
 
     signupUser = async (userName) => {
-      await Firebase.auth().onAuthStateChanged( FBUser => {
-        FBUser.updateProfile({
-          name: userName
-        }).then(() => {
-          this.setState({loading : false});
-          this.props.navigation.navigate('home');     
-        });
-      });
+      const user=  await Firebase.auth().currentUser;
+      user.updateProfile({ displayName: userName }).then(() => this.props.navigation.navigate('home'));
     };
 
     signupHandler = async () => {
       const  name = this.state.controls.name.value;
       const  email = this.state.controls.email.value;
       const  password = this.state.controls.password.value;
-      this.setState({loading : true});
-      await firebase
+      await Firebase
         .auth()
         .createUserWithEmailAndPassword( email, password )
         .then(() => {
@@ -93,20 +85,14 @@ class SignupScreen extends Component {
         })
         .catch(error => {
           if (error.message !== null) {
-            this.setState({ errorMessage: error.message, loading: false});
-          } else {
-            this.setState({ errorMessage: null });
+            alert(error.message);
           }
       });
     };
 
 
     startLoginScreen = () => {
-      const navActions = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({routeName: "login"})]
-      });
-      this.props.navigation.dispatch(navActions);
+      this.props.navigation.navigate('login');
     };
       
     updateInputState = (key, value) => {
@@ -156,29 +142,28 @@ class SignupScreen extends Component {
       };
 
 
-    render (){
+      render (){
         
         return (
-            <KeyboardAvoidingView style={styles.Container}  behavior="padding">
-
-                <Block padding={[0, theme.sizes.base * 2]}>
-
-                    <Block left margin={[30 , 0]}>
+            <KeyboardAvoidingView style={styles.Container}  behavior="padding" enabled>
+                
+                    <View style={styles.viewflexStart}>
                       
                       <Logo />
- 
-                      <Text h2 semibold black>Fingerprint Makes Life Easier</Text>
+
+                      <HeadingText size={35} fontFamily='Fjalla-one'>Fingerprint Makes Life Easier</HeadingText>
              
-                    </Block>
+                    </View>
                     
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss} >
 
-                      <Block center middle>
+ 
+                        <View style={styles.viewCenter}>
 
-                            <Block Block row space="between" margin={[5, 0]} style={styles.inputContainer}>  
-                              <DefaultInput 
+                            <View style={styles.inputContainer}>
+                                <DefaultInput 
                                     iconName='person'
-                                    placeholder="Full Name"
+                                    placeholder="Name"
                                     value={this.state.controls.name.value}
                                     onChangeText={(val) => this.updateInputState('name', val)}
                                     autoCorrect={false}
@@ -186,97 +171,85 @@ class SignupScreen extends Component {
                                     touched={this.state.controls.name.touch}
                                     placeholderTextColor="#5a6e65"
                                     textContentType='name'
-                                /> 
-                            </Block>
+                                />
+                            </View>  
 
-                            <Block Block row space="between" margin={[5, 0]} style={styles.inputContainer}>
-                                
-                              <DefaultInput 
-                                  iconName='email'
-                                  placeholder="Email"
-                                  style={styles.input}
-                                  value={this.state.controls.email.value}
-                                  onChangeText={(val) => this.updateInputState("email", val)}
-                                  valid={this.state.controls.email.valid}
-                                  touched={this.state.controls.email.touched}
-                                  autoCapitalize='none'
-                                  autoCorrect={false}
-                                  placeholderTextColor="#5a6e65"
-                                  keyboardType="email-address"
-                                  textContentType='emailAddress'
-                              />
-
-                            </Block>
+                            <View style={styles.inputContainer}>
+                                <DefaultInput 
+                                   iconName='email'
+                                    placeholder="Email"
+                                    style={styles.input}
+                                    value={this.state.controls.email.value}
+                                    onChangeText={(val) => this.updateInputState("email", val)}
+                                    valid={this.state.controls.email.valid}
+                                    touched={this.state.controls.email.touched}
+                                    autoCapitalize='none'
+                                    autoCorrect={false}
+                                    placeholderTextColor="#5a6e65"
+                                    keyboardType="email-address"
+                                    textContentType='emailAddress'
+                                />
+                            </View>
                             
-                            <Block row space="between" margin={[5, 0]} style={styles.inputContainer}>
-                              
-                              <DefaultInput 
-                                  iconName='remove-red-eye'
-                                  placeholder="Password"
-                                  style={styles.input}
-                                  value={this.state.controls.password.value}
-                                  onChangeText={val => this.updateInputState("password", val)}
-                                  valid={this.state.controls.password.valid}
-                                  touched={this.state.controls.password.touched}
-                                  autoCorrect={false}
-                                  placeholderTextColor="#5a6e65"
-                                  secureTextEntry={true}
-                                  textContentType='password'
-                              />
-
-                            </Block>
+                            <View style={styles.inputContainer}>
+                                <DefaultInput 
+                                    iconName='remove-red-eye'
+                                    placeholder="Password"
+                                    style={styles.input}
+                                    value={this.state.controls.password.value}
+                                    onChangeText={val => this.updateInputState("password", val)}
+                                    valid={this.state.controls.password.valid}
+                                    touched={this.state.controls.password.touched}
+                                    autoCorrect={false}
+                                    placeholderTextColor="#5a6e65"
+                                    secureTextEntry={true}
+                                    textContentType='password'
+                                />
+                            </View>
+                            <View style={styles.inputContainer}>
+                                <DefaultInput 
+                                    iconName='remove-red-eye'
+                                    placeholder="Confirm Password"
+                                    style={styles.input}
+                                    value={this.state.controls.confirmPassword.value}
+                                    onChangeText={val => this.updateInputState("confirmPassword", val)}
+                                    valid={this.state.controls.confirmPassword.valid}
+                                    touched={this.state.controls.confirmPassword.touched}
+                                    autoCorrect={false}
+                                    placeholderTextColor="#5a6e65"
+                                    secureTextEntry={true}
+                                    textContentType='password'
+                                />
+                            </View>
                             
-                            <Block row space="between" margin={[5, 0]} style={styles.inputContainer}>
-                            
-                              <DefaultInput 
-                                  iconName='remove-red-eye'
-                                  placeholder="Confirm Password"
-                                  style={styles.input}
-                                  value={this.state.controls.confirmPassword.value}
-                                  onChangeText={val => this.updateInputState("confirmPassword", val)}
-                                  valid={this.state.controls.confirmPassword.valid}
-                                  touched={this.state.controls.confirmPassword.touched}
-                                  autoCorrect={false}
-                                  placeholderTextColor="#5a6e65"
-                                  secureTextEntry={true}
-                                  textContentType='password'
-                              />
-                            
-                            </Block>
-                            
-                            <Block center style={styles.bottom}>
+                            <View style={styles.bottom}>
                                    
-                                    <ButtonD gradient
+                                    <CustomButton 
                                         onPress={this.signupHandler} 
+                                        bgColor="#f6b810" 
+                                        size={22}
+                                        width={320}
                                         disabled={
                                             !this.state.controls.confirmPassword.valid ||
                                             !this.state.controls.email.valid ||
                                             !this.state.controls.password.valid
                                         }
-                                    >
-                                      {loading ?
-                                        <ActivityIndicator size="small" color="black" /> :
-                                        <Text bold black center>Sign Up</Text>
-                                      }
+                                    >Sign up</CustomButton>
                                     
-                                    </ButtonD>
+                                    <View style={styles.logincontainer}>
                                     
-                                    <Block row space="between" margin={[10 , 0]}>
-                                    
-                                      <Text black meduim > If you have an account ? </Text>
-                  
-                                      <Text meduim tintColor onPress={this.startLoginScreen}>Log In</Text>      
+                                        <MainText>If you have an account ?</MainText>
+                    
+                                        <Button onPress={this.startLoginScreen} color="#f6b810" marginL={5} size={16}>Login</Button>      
                                         
-                                    </Block>                    
+                                    </View>                    
                             
-                            </Block>
+                            </View>
                         
-                        </Block>
+                        </View>
 
                     </TouchableWithoutFeedback>   
-
-                </Block>                
-
+                                
             </KeyboardAvoidingView>
 
         );
@@ -287,6 +260,16 @@ const styles = StyleSheet.create({
     Container: {
       flex: 1,
       backgroundColor: '#faf8fb',
+      justifyContent: 'center',
+      padding: 8, 
+    },
+    viewCenter: {
+      alignItems: 'center'
+    },
+    viewflexStart: {
+      alignItems: 'flex-start',
+      marginBottom: 60,
+      marginLeft: 20
     },
     inputContainer: {
       width: "80%"
@@ -295,6 +278,15 @@ const styles = StyleSheet.create({
       backgroundColor: "#eee",
       borderColor: "#bbb"
     },
+    bottom: {
+      alignItems: 'center',
+      marginTop: 40
+    },
+    logincontainer: {
+      flexDirection: 'row',
+      alignItems: 'baseline',
+      justifyContent: 'center'
+    }
 });
 
 export default SignupScreen;

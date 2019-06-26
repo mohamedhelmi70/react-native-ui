@@ -9,13 +9,10 @@ const colors = {
   errorText: '#000',
   warningBackground: '#EAEB5E',
   warningText: '#666804',
-  noticeBackground: tintColor,
+  noticeBackground: '#EAEB5E',
   noticeText: '#fff',
-  tabIconDefault: '#070606',
-  accent: "#F3534A",
+  tabIconDefault: '#323643',
   primary: tintColor,
-  secondary: "#ffcf4c",
-  tertiary: "#FFE358",
   black: "#323643",
   white: "#FFFFFF",
   gray: "#d0d2d8f5",
@@ -25,8 +22,8 @@ const colors = {
 
 const sizes = {
   // global sizes
-  base: 16,
-  font: 14,
+  base: 18,
+  font: 16,
   radius: 6,
   padding: 25,
 

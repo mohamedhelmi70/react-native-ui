@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 import {
   StyleSheet, 
+  View,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
-  Keyboard
+  Keyboard,
 } from 'react-native';
 import PropTypes from 'prop-types';
-import * as  theme  from '../../../constants/Theme/Theme';
-import { ButtonD, Block, Text} from '../../../components/UI/index';
 import Firebase from '../../../services/Firebase';
 
+import CustomButton from '../../../components/UI/CustomButton/CustomButton';
 import DefaultInput from '../../../components/UI/DefaultInput/DefaultInput';
 import validate from '../../../utility/validation';
 import LogoTitle from '../../../components/UI/LogoTitle/LogoTitle';
@@ -19,40 +19,39 @@ class ChangePasswordScreen extends Component {
     constructor(props) {
       super(props);
       this.state = {
-          loading: false,
-          errorMessage,
+          errorMessage: null,
           controls: {
-            currPassword: {
-              value: "",
-              valid: false,
-              validationRules: {
-                menLength: 6
+              currPassword: {
+                value: "",
+                valid: false,
+                validationRules: {
+                  menLength: 6
+                },
+                touched: false
               },
-              touched: false
-          },
-          newPassword: {
-              value: "",
-              valid: false,
-              validationRules: {
-                menLength: 6
+              newPassword: {
+                  value: "",
+                  valid: false,
+                  validationRules: {
+                    menLength: 6
+                  },
+                  touched: false
               },
-              touched: false
-          },
-          confirmPassword: {
-              value: "",
-              valid: false,
-              validationRules: {
-                equalTo: "newPassword"
-              },
-              touched: false
-          }
+              confirmPassword: {
+                  value: "",
+                  valid: false,
+                  validationRules: {
+                    equalTo: "newPassword"
+                  },
+                  touched: false
+              }
         }
       }
     };
    
     static navigationOptions = {
       title: "Change Password",
-      headerRight: <LogoTitle />,
+      headerRight: <LogoTitle ur={null} />,
     };
 
     static propTypes = {
@@ -107,9 +106,9 @@ class ChangePasswordScreen extends Component {
     };
 
     reauthenticate = async (currPassword) => {
-      const user = Firebase.auth().currentUser;
+      const user = await Firebase.auth().currentUser;
       const cred = await Firebase.auth.EmailAuthProvider.credential( user.email, currPassword);
-      return user.reauthenticateWithCredential(cred);
+      return user.reauthenticateAndRetrieveDataWithCredential(cred);
     }
   
     changePasswordHandler = async () => {
@@ -117,10 +116,10 @@ class ChangePasswordScreen extends Component {
       const newPass = this.state.controls.newPassword.value;
       this.setState({loading: true});
       await this.reauthenticate(currentPass).then(() => {
-        const user = await Firebase.auth().currentUser;
+        const user = Firebase.auth().currentUser;
         user.updatePassword(newPass).then(() => {
-          this.setState({loading: false});
           alert("Password updated!");
+          setTimeout(() => this.props.navigation.navigate('profile'), 5000);
         })
         .catch(error => {
           if (error.message !== null) {
@@ -145,31 +144,29 @@ class ChangePasswordScreen extends Component {
         
         return (
             <KeyboardAvoidingView style={styles.container}  behavior="padding">
-              
-              <Block padding={[0, theme.sizes.base * 2]} >
 
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                   
-                  <Block center middle>
+                  <View style={styles.body}>
 
-                    <Block padding={[10]}>
+                    <View style={styles.item}>
                       
                       <DefaultInput 
                         iconName='remove-red-eye'
                         placeholder="Current Password"
-                        value={this.state.controls.oldPassword.value}
+                        value={this.state.controls.currPassword.value}
                         onChangeText={val => this.updateInputState("currPassword", val)}
-                        valid={this.state.controls.oldPassword.valid}
-                        touched={this.state.controls.oldPassword.touched}
+                        valid={this.state.controls.currPassword.valid}
+                        touched={this.state.controls.currPassword.touched}
                         autoCorrect={false}
                         placeholderTextColor="#5a6e65"
                         secureTextEntry={true}
                         textContentType='password'
                       />
                 
-                    </Block>    
+                    </View>    
 
-                    <Block padding={[10]}>
+                    <View style={styles.item}>
                   
                       <DefaultInput 
                         iconName='remove-red-eye'
@@ -184,9 +181,9 @@ class ChangePasswordScreen extends Component {
                         textContentType='password'
                         />
                     
-                    </Block>
+                    </View>
                         
-                    <Block padding={[10]}>
+                    <View style={styles.item}>
                     
                       <DefaultInput 
                         iconName='remove-red-eye'
@@ -201,30 +198,30 @@ class ChangePasswordScreen extends Component {
                         textContentType='password'
                       />
                     
-                    </Block>
+                    </View>
                         
                     
-                    <Block margin={[20, 0]} center>
+                    <View style={styles.bottom}>
                       
-                      <ButtonD gradient
+                    <CustomButton
+                        moreStyle={{width: 320, height: 55, marginTop: 60}}
+                        bgColor="#f6b810"  
+                        size={22} 
                         onPress={this.changePasswordHandler} 
                         disabled={ 
                           !this.state.controls.newPassword.valid || 
                           !this.state.controls.confirmPassword.valid 
                           }
                       >
-                        {loading ? <ActivityIndecator size="small" color="black" /> : <Text bold black >Save Changes</Text>}
-                      
-                      </ButtonD>
+                        Save Changes
+                      </CustomButton>
 
-                    </Block>                    
+                    </View>                    
                     
-                  </Block>
+                  </View>
 
-                </TouchableWithoutFeedback>
-              
-              </Block> 
-            
+                </TouchableWithoutFeedback> 
+      
             </KeyboardAvoidingView>
         );  
     }
@@ -232,13 +229,23 @@ class ChangePasswordScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#faf8fb',
-    },
-    item: {
-      width: '80%' 
-    },
+  container: {
+    flex: 1,
+    backgroundColor: '#faf8fb',
+    justifyContent: 'center',
+    padding: 10,
+  },
+  body: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },   
+  item: {
+    width: '80%', 
+    marginTop: 10,
+  },
+  bottom: {
+    marginTop: 20
+  }
 });
 
 export default ChangePasswordScreen;

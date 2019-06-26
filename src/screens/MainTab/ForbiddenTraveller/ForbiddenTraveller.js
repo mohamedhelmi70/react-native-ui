@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import PropTypes from 'prop-types';
-import * as  theme  from '../../../constants/Theme/Theme';
-import { ButtonD, Block } from '../../../components/UI/Index';
 
 import PickImage from '../../../components/PickImage/PickImage';
+import CustomButton from '../../../components/UI/CustomButton/CustomButton';
 import LogoTitle from '../../../components/UI/LogoTitle/LogoTitle';
 
 
@@ -19,20 +18,19 @@ class IdentityScreen extends Component {
                     valid: false
                 },
             },
-            loading: false
         };
     };
 
     static navigationOptions = {
         title: "Forbidden Traveller",
-        headerRight: <LogoTitle />,
+        headerRight: <LogoTitle ur={null} />,
     };
 
     static propTypes = {
         navigation: PropTypes.object,
     };
 
-    fingerprintPickedHandler = fingerprint => {
+    handleFingerprint = fingerprint => {
         this.setState(prevState => {
             return {
                 ...prevState.controls,
@@ -52,28 +50,37 @@ class IdentityScreen extends Component {
        
         return (
 
-            <Block>
-
-                <Block margin={[0, theme.sizes.base * 2, 40]} middle center shadow>
-                    <PickImage text="Capture your fingerprint By Camera" wth={'80%'} hht={150} onImagePicked={this.pickFingerprintHandler} />
-                </Block>
+            <View style={styles.container}>
                 
-                <ButtonD gradient
-                    onPress={this.checkTravellerHandler} 
-                    disabled={
-                        !this.state.controls.fingerprintPicked.valid 
-                    }
-                >
-                    {loading ?
-                        <ActivityIndicator size="small" color="white" /> :
-                        <Text bold black center> Check </Text>
-                    }
-                </ButtonD>      
+                <HeadingText size={25}> Pick Fingrprint </HeadingText>
 
-            </Block>
+                <mainText>We use your fingerprint to check your identity and verify </mainText>
+                
+                <PickImage h={150} w={'80%'} onImagePicked={this.handleFingerprint} />
+
+                <CustomButton
+                    moreStyle={{width: 290, height: 55, marginTop: 50}}
+                    bgColor="#f6b810"  
+                    size={22} 
+                    onPress={this.checkTravellerHandler} 
+                    disabled={ !this.state.controls.fingerprintPicked.valid }
+                >
+                Check
+                </CustomButton>      
+
+            </View>
        );
     }
-
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 20,
+        backgroundColor: '#faf8fb', 
+    },
+});
 
 export default IdentityScreen;

@@ -1,34 +1,38 @@
 import React from 'react';
 import {View , StyleSheet, Image, TouchableWithoutFeedback} from 'react-native';
-import { ImagePicker } from 'expo';
+import { ImagePicker, Permissions } from 'expo';
 
 class UserAvatar extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            image: null
+        };
+    } 
 
-    state = {
-        image: null
+    askPermissionsAsync = async () => {
+        await Permissions.askAsync(Permissions.CAMERA);
+        await Permissions.askAsync(Permissions.CAMERA_ROLL);
     };
-
     
-    changeAvatarHandler = async () => {
-        const result = await ImagePicker.launchCameraAsync(
-            {allowsEditing: true,
-             aspect: [4,3]   
-            });
-        if(!result.cancelled) {
-            this.setState({
-                image: result.uri
-            });
-            this.props.onChangeAvatar({uri: result.uri, base64: result.data});
-        }    
+    handleAvatar = async () => {
+        await this.askPermissionsAsync();
+        let result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          aspect: [4, 3],
+          base64: true,
+        });
+        this.setState({image: result.uri });
+        this.props.onChangeAvatar({uri: result.uri, base64: result.data});
     };
 
     render() {
 
         return (
           
-            <TouchableWithoutFeedback onPress={this.changeAvatarHandler}>  
+            <TouchableWithoutFeedback onPress={this.handleAvatar}>  
                 <View style={styles.ava}>
-                    <Image style={styles.img} source={this.state.image=== null ? require('../../../assets/images/Avatar.png') : {uri:this.state.image}} />
+                    <Image style={styles.img} source={this.state.image === null ? require('../../../assets/images/Avatar.png') : {uri:this.state.image}} />
                 </View>  
             </TouchableWithoutFeedback>
         

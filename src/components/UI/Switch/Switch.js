@@ -12,17 +12,14 @@ export default class SwitchInput extends React.PureComponent {
 
     if (Platform.OS === 'android') {
       thumbColor = GRAY_COLOR;
-      if (props.value) thumbColor = theme.colors.secondary;
+      if (props.value) thumbColor = theme.colors.tintColor;
     }
 
     return (
       <Switch
         thumbColor={thumbColor}
         ios_backgroundColor={GRAY_COLOR}
-        trackColor={{
-          // false: GRAY_COLOR,
-          true: theme.colors.secondary
-        }}
+        trackColor={{ true: theme.colors.tintColor }}
         value={value}
         {...props}
       />

@@ -34,9 +34,9 @@ const customButton = (props) => {
 const styles = StyleSheet.create({
     button: {
         padding: 10,
-        height: 45, 
+        height: 55, 
         marginBottom: 20,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     disbled: {
         backgroundColor: "#eee",

@@ -8,6 +8,7 @@ import {
     Keyboard 
 } from 'react-native';
 import PropTypes from 'prop-types';
+import Firebase from '../../../services/Firebase';
 
 import Avatar from '../../../components/UI/UserAvatar/UserAvatar';
 import DefaultInput from '../../../components/UI/DefaultInput/DefaultInput';
@@ -20,31 +21,21 @@ class AboutScreen extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
-            errorMessage: null,
             controls: {
                 imagePicked: {
                     value: null,
                     valid: true
                 },
                 name: {
-                    value: "",
+                    value: '',
                     valid: false,
                     validationRules: {
                         isfullName: true
                     },
                     touched: false
                 }, 
-                email: {
-                    value: "",
-                    valid: false,
-                    validationRules: {
-                        isEmail: true
-                    },
-                    touched: false
-                },
                 dateOfBirth: {
-                    value: "25-5-1997",
+                    value: '',
                     valid: false,
                     validationRules: {
                       isDate: true
@@ -52,7 +43,7 @@ class AboutScreen extends Component {
                     touched: false
                 },
                 phone: {
-                    value: "",
+                    value: '',
                     valid: false,
                     validationRules: {
                         isPhoneNumber: true
@@ -60,7 +51,7 @@ class AboutScreen extends Component {
                     touched: false
                 },
                 address: {
-                    value: "",
+                    value: '',
                     valid: false,
                     validationRules: {
                         isAddress: true
@@ -73,7 +64,7 @@ class AboutScreen extends Component {
 
     static navigationOptions = {
         title: "About",
-        headerRight: <LogoTitle />,
+        headerRight: <LogoTitle ur={null} />,
     };
     
     static propTypes = {
@@ -81,9 +72,27 @@ class AboutScreen extends Component {
         validate: PropTypes.func,
     };
 
+    async componentDidMount() {
+        const user = await Firebase.auth().currentUser;
+          if ( user ) {
+            this.setState(prevState => ({
+                controls: {
+                    ...prevState.controls,
+                    name: {
+                        ...prevState.controls.name,
+                        value: user.displayName,
+                    },
+                    phone: {
+                        ...prevState.controls.phone,
+                        value: user.phoneNumber,
+                    },
+                }
+            }));
+          }
+    } 
+
     updateInputState = (key, value) => {
-        this.setState(prevState => {
-          return {
+        this.setState(prevState => ({
             controls: {
               ...prevState.controls,
               [key]: {
@@ -96,27 +105,32 @@ class AboutScreen extends Component {
                 touched: true
               }
             }
-          };
-        });
+        }));
     };
 
-    changeAvatarHandler = image => {
-        this.setState(prevState => {
-            return {
+    handleAvatar = image => {
+        this.setState(prevState => ({
               controls: {
                 ...prevState.controls,
                 imagePicked: {
                   value: image,
                   valid: true
                 }
-              }    
-            };
-        });
+              }
+        }));
     }
     
-    SaveChangesHndler = () => {
-        this.props.navigation.navigate('profile');
+    handleChanges = async () => {
+        const  name = this.state.controls.name.value;
+        const  phone = this.state.controls.phone.value;
+        const user =  await Firebase.auth().currentUser;
+        if ( user ) {
+            user.updateProfile({ displayName : name, phoneNumber: phone }).then(() => {
+                alert('Profile Updated :)')
+            });
+        }    
     }
+
     
     render() {
         return (
@@ -131,7 +145,7 @@ class AboutScreen extends Component {
 
                                 <View style={styles.item}>
                                       
-                                   <Avatar onChangeAvatar={this.changeAvatarHandler} />
+                                   <Avatar onChangeAvatar={this.handleAvatar} />
 
                                 </View>
                                 
@@ -165,27 +179,12 @@ class AboutScreen extends Component {
                                 
                                 </View>
                                 
-                                <View style={styles.item}>
-                                
- 
-                                    <DefaultInput 
-                                        iconName='email'
-                                        placeholder="ex: moh1253@examle.com"
-                                        value={this.state.controls.email.value}
-                                        onChangeText={(val) => this.updateInputState('email', val)}
-                                        autoCorrect={false}
-                                        valid={this.state.controls.email.valid}
-                                        touched={this.state.controls.email.touch}
-                                        placeholderTextColor="#5a6e65"
-                                    />
-
-                                </View>
 
                                 <View style={styles.item}>
                                  
                                     <DefaultInput 
                                         iconName='phone-android'
-                                        placeholder='ex: +1029524141'
+                                        placeholder='ex: +61029524141'
                                         value={this.state.controls.phone.value}
                                         onChangeText={(val) => this.updateInputState('phone', val)}
                                         autoCorrect={false}
@@ -214,18 +213,10 @@ class AboutScreen extends Component {
                             <View style={{marginTop: 10}}>
 
                                 <CustomButton 
-                                    onPress={this.SaveChangesHndler} 
-                                    bgColor='#f6b810' 
-                                    size={20} 
-                                    width={250}
-                                    disabled={ 
-                                        !this.state.controls.email.valid &&
-                                        !this.state.controls.name.valid &&
-                                        !this.state.controls.phone.valid &&
-                                        !this.state.controls.dateOfBirth.valid &&
-                                        !this.state.controls.address.valid 
-                                     
-                                    }  
+                                    onPress={this.handleChanges} 
+                                    bgColor='#f6b810'
+                                    moreStyle={{width: 280, height: 55, marginTop: 60}} 
+                                    size={22}  
                                 >
                                     Save Changes
                                 </CustomButton>
@@ -259,6 +250,5 @@ const styles = StyleSheet.create({
         width: "80%"
     },
 });
-
 
 export default AboutScreen;

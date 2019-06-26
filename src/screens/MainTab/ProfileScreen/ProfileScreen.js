@@ -1,21 +1,37 @@
 import React from 'react';
-import { StyleSheet } from 'react-native'; 
+import { View, StyleSheet } from 'react-native'; 
 import PropTypes from 'prop-types';
-import * as  theme  from '../../../constants/Theme/Theme';
-import { Block, Text } from '../../../components/UI/index';
+import Firebase from '../../../services/Firebase';
 
 import Image from '../../../components/UI/Image/Image';
+import Button from '../../../components/UI/Button/Button';
 import Icon from '../../../components/TabBarIcon/TabBarIcon';
-import Firebase from '../../../config/Firebase';
+import MainText from '../../../components/UI/mainText/mainText';
 
 class ProfileScreen extends React.Component {
   
   constructor(props) {
     super(props);
     this.state = {
-      name: 'Mo Helmi',
+      user: '',
+      name: '',
+      userID: '',
+      email: ''
     };
   }
+
+  async componentDidMount() {
+    const user=  await Firebase.auth().currentUser;
+      if ( user ) {
+        this.setState(prevState => ({
+          ...prevState,
+          user: user,
+          name: user.displayName,
+          userID: user.uid,
+          email: user.email,
+        }));
+     }  
+  }   
 
   static navigationOptions = {
     header: null,
@@ -26,86 +42,140 @@ class ProfileScreen extends React.Component {
   };
   
   signoutHandler = async () => {
-    await Firebase.auth().signOut().then(() => { this.props.navigation.navigate('login') } );
+    this.setState(prevState => ({
+      ...prevState,
+      name: null,
+      userID: null,
+      user: null
+    }));
+
+    await Firebase.auth().signOut();
   }
 
   render() {
     
     return (
       
-      <Block>
+      <View style={styles.Container}>
           
-        <Block flex={false} row center space="between" style={styles.header}>
-          
-          <Text h2 bold> { this.state.name } </Text>
-          
-          <Image image={null} style={styles.avatar} />
-        
-        </Block>
-            
-          <Block style={styles.bodyContainer}>
+          <View style={styles.viewFlexStart}>
+             
+            <View style={styles.header}>
               
-            <Block row space="between" margin={[10, 0]} style={styles.item}>
-
-              <Icon name='md-home' size={17} focused={true} /> 
+              <View style={styles.avatarHeader}>
+              
+                <Image image={null} />
+              
+              </View>  
+                  
+              <View style={styles.headerSubItem}>
                 
-              <Text medium secondary onPress={() => this.props.navigation.navigate('home')} > Home </Text>
-            
-            </Block>
+                <MainText moreStyle={{fontSize: 19, fontFamily: 'Fjalla-one', color: '#2e3131'}}> {this.state.name} </MainText>
 
-            <Block row space="between" margin={[10, 0]} style={styles.item}>
+                <MainText moreStyle={{fontSize: 17, color: '#2e3131'}}> {this.state.email} </MainText>
+               
+              </View>
+                
+            </View>
+            
+            <View style={styles.bodyContainer}>
+              
+              <View style={styles.item}>
+
+                <Icon name='md-home' size={17} focused={true} /> 
+              
+                <Button size={17} marginL={15} onPress={() => this.props.navigation.navigate('home')} >Home</Button>
+              
+              </View>
+
+              <View style={styles.item}>
                  
-              <Icon name='md-settings' size={17} focused={true} />
+                <Icon name='md-settings' size={17} focused={true} />
               
-              <Text medium secondary onPress={() => this.props.navigation.navigate('about')} > About </Text>
+                <Button size={17} marginL={15} onPress={() => this.props.navigation.navigate('about')} >About</Button>
               
-            </Block>
+              </View>
 
-            <Block row space="between" margin={[10, 0]} style={styles.item}>
-                
-              <Icon name='md-lock' size={17} focused={true} /> 
-              
-              <Text medium secondary onPress={() => this.props.navigation.navigate('changePass')} >Change Password</Text>
-              
-            </Block>
+              <View style={styles.item}>
+                 
+                <Icon name='md-lock' size={17} focused={true} /> 
+               
+                <Button size={17} marginL={15} onPress={() => this.props.navigation.navigate('changePass')} >Change Password</Button>
+               
+              </View>
 
-            <Block row space="between" margin={[10, 0]} style={styles.item}>
-                
-              <Icon name='md-help-circle' size={17} focused={true} />
-            
-              <Text medium secondary onPress={() => alert('Help')} > Help </Text>
+              <View style={styles.item}>
+                 
+                <Icon name='md-help-circle' size={17} focused={true} />
               
-            </Block>
+                <Button size={17} marginL={15} onPress={() => alert('Help')} >Help</Button>
+               
+              </View>
 
-            <Block row space="between" margin={[10, 0]} style={styles.item}>
+              <View style={styles.item}>
+              
+                <Icon name='md-log-out' size={17} focused={true} /> 
+              
+                <Button size={17} marginL={15} onPress={this.signoutHandler} >Logout</Button>
+              
+              </View>
             
-              <Icon name='md-log-out' size={17} focused={true} /> 
-            
-              <Text medium secondary onPress={this.signoutHandler} > Log Out </Text>
-            
-            </Block>
-            
-          </Block>
+            </View>
+          
+          </View>
       
-      </Block>
+      </View>
     );
   }
 }
 
 const styles =StyleSheet.create({
-  header: {
-    paddingHorizontal: theme.sizes.base * 2,
+  Container: {
+    flex: 1,
+    backgroundColor: '#faf8fb',
+    padding: 10,
   },
-  avatar: {
-    height: theme.sizes.base * 2.2,
-    width: theme.sizes.base * 2.2,
+  header:{
+    marginTop: 5,
+    marginBottom: 5,
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    height: 200,
+    width: '100%',
+    borderRadius: 10
+  },
+  avatarHeader: {
+    borderColor: '#000',
+    borderStyle: 'dashed',
+    borderWidth: .5,
+    borderRadius: 30,
+    padding: 2, 
+    marginLeft: 5,
+  },
+  headerSubItem: {
+    marginLeft: 15
   },
   bodyContainer: {
-    marginTop: theme.sizes.base * 0.7,
-    paddingHorizontal: theme.sizes.base * 2,
+    alignItems: 'flex-start',
+    backgroundColor: '#fff',
+    paddingTop: 10,
+    paddingBottom: 20,
+    height: 400,
+    width: '100%',
+    borderRadius: 15,
   },
   item: {
-    alignItems: 'flex-end'
+    borderBottomColor: '#000',
+    borderStyle: 'solid',
+    borderBottomWidth: .4,
+    padding: 12,
+    paddingBottom: 12,
+    flexDirection: 'row',
+    alignItems: 'baseline',
+    width: '95%',
+    marginTop: 12,
+    marginLeft: 5
   }
 });
 

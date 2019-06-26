@@ -1,37 +1,28 @@
 import React, { Component } from 'react';
-import {
-  StyleSheet, 
-  ScrollView, 
-  KeyboardAvoidingView, 
-  ActivityIndicator
-} from 'react-native';
+import { View, StyleSheet, ScrollView, KeyboardAvoidingView, Picker } from 'react-native';
 import PropTypes from 'prop-types';
-import * as  theme  from '../../../constants/Theme/Theme';
-import { Divider, ButtonD, Block, Text, Switch } from '../../../components/UI/index';
+import { Divider, Text, Switch } from '../../../components/UI/index';
+import LogoTitle from '../../../components/UI/LogoTitle/LogoTitle';
+import axios from 'axios';
 
+import CustomButton from '../../../components/UI/CustomButton/CustomButton';
 import PickImage from '../../../components/PickImage/PickImage';
 import DefaultInput from '../../../components/UI/DefaultInput/DefaultInput';
 import validate from '../../../utility/validation';
-import LogoTitle from '../../../components/UI/LogoTitle/LogoTitle';
-import PickRecord from '../../../components/PickRecord/PickRecord';
+import mainText from '../../../components/UI/mainText/mainText';
+import HeadingText from '../../../components/UI/HeadingText/HeadingText';
 
 class AddScreen extends Component {
     
     constructor(props) {
-        
         super(props);
-
         this.state = {
             controls: {
-                imagePicked: {
+                image: {
                   value: null,
                   valid: false
                 },
-                recordPicked: {
-                  value: null,
-                  valid: false
-                },
-                fingerprintPicked: {
+                fingerprint: {
                   value: null,
                   valid: false
                 },
@@ -44,41 +35,44 @@ class AddScreen extends Component {
                   touched: false
                 }, 
                 birthDate: {
-                    value: "25-5-1997",
-                    valid: false,
-                    validationRules: {
-                      isDate: true
-                    },
-                    touched: false
+                  value: "25-5-1997",
+                  valid: false,
+                  validationRules: {
+                    isDate: true
+                  },
+                  touched: false
                 },
                 phone: {
-                    value: "",
-                    valid: false,
-                    validationRules: {
-                      isPhoneNumber: true
-                    },
-                    touched: false
+                  value: "",
+                  valid: false,
+                  validationRules: {
+                    isPhoneNumber: true
+                  },
+                  touched: false
                 },
                 address: {
-                    value: "",
-                    valid: false,
-                    validationRules: {
-                        isAddress: true
-                    },
-                    touched: false
+                  value: "",
+                  valid: false,
+                  validationRules: {
+                      isAddress: true
+                  },
+                  touched: false
                 },
-                A : false,
-                B : false,
-                C : false,
-                D : false,
             },
-            loading: false,
+            diabates : false,
+            cancer : false,
+            heartDisease : false,
+            hepatitosC : false,
+            hepatitosB : false,
+            AIDS : false,
+            statusValueHolder: '',
+            genderValueHolder: ''
         }
     };
 
     static navigationOptions = {
       title: "Add Person",
-      headerRight: <LogoTitle />,
+      headerRight: <LogoTitle ur={null} />,
     };
     
     static propTypes = {
@@ -89,6 +83,7 @@ class AddScreen extends Component {
     updateInputState = (key, value) => {
         this.setState(prevState => {
           return {
+            ...prevState,
             controls: {
               ...prevState.controls,
               [key]: {
@@ -105,12 +100,13 @@ class AddScreen extends Component {
         });
     };
 
-    pickImageHandler = image => {
+    handleImage = image => {
       this.setState(prevState => {
           return {
+             ...prevState,
              controls: {
                   ...prevState.controls,
-                  imagePicked: {
+                  image: {
                     value: image,
                     valid: true
                   }
@@ -119,12 +115,13 @@ class AddScreen extends Component {
       });
     };
 
-    pickFingerprintHandler = fingerprint => {
+    handleFingerprint = fingerprint => {
       this.setState(prevState => {
         return {
+          ...prevState,
           controls: {
             ...prevState.controls,
-            fingerprintPicked: {
+            fingerprint: {
               value: fingerprint,
               valid: true
             }
@@ -132,182 +129,326 @@ class AddScreen extends Component {
         };
       });
     };
-    
+
     addPersonHandler = async () => {
-      this.props.navigation.navigate('home');            
+      const promise = await axios.post("http://localhost:8000", {"Mohamed": "Hosa"});
+      const status = promise.status;
+      if(status===200) {
+      const data = promise.data.data;
+      this.setState({books:data});
+      }
+      this.props.navigation.navigate('users');            
     }
     
     render() {
+      
         return (
 
-          <KeyboardAvoidingView style={styles.addPerson} behavior="padding">
-            
-            <Block padding={[0, theme.sizes.base * 2]}> 
+          <KeyboardAvoidingView style={styles.container} behavior="padding">
                 
                 <ScrollView showsVerticalScrollIndicator={false}>
 
-                    <PickImage text="Capture image of your fingerprint" wth={'80%'} hht={150} onImagePicked={this.pickFingerprintHandler} />
+                    <View style={styles.top}>
 
-                    <PickImage text="Take Selfie" wth={'60%'} hht={160} onImagePicked={this.pickImageHandler} />
-                    
-                    <PickRecord />
+                      <View style={styles.box}>
+
+                        <HeadingText size={25}> Pick Fingrprint </HeadingText>
+
+                        <mainText>We use your fingerprint to check your identity</mainText> 
+                      
+                        <PickImage h={150} w={'80%'}  text={'Fingerprint'} onImagePicked={this.handleFingerprint} />
+
+                      </View>
+
+                      <View style={styles.box}>
+
+                        <HeadingText size={25} > Take Selfie </HeadingText>
+                            
+                        <mainText>We use your selfie to check your identity</mainText>  
+                            
+                        <mainText>Good Lighting</mainText>
+
+                        <mainText>Look straight</mainText> 
+                      
+                        <PickImage h={200} w={'55%'}  text={'Face'} onImagePicked={this.handleImage} />
+
+                      </View>
+                    </View>
 
                     <Divider />
                     
-                    <Block style={styles.inputs}>
+                    <View style={styles.info}>
                       
-                      <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
+                      <View style={styles.item}>
 
-                          <Block>
-                            <Text gray2 style={{ marginBottom: 10 }}>Person</Text>
-                          </Block>
-                        
+                        <Text medium black title>Name</Text>  
+
+                        <View style={{width: '70%'}}>
+                      
                           <DefaultInput 
-                              iconName='person'
-                              placeholder="ex: Mo Helmi"
-                              value={this.state.controls.name.value}
-                              onChangeText={(val) => this.updateInputState('name', val)}
-                              autoCorrect={false}
-                              valid={this.state.controls.name.valid}
-                              touched={this.state.controls.name.touch}
-                              placeholderTextColor="#5a6e65"
-                              textContentType='name'
+                            iconName='person'
+                            placeholder="ex: Mo Helmi"
+                            value={this.state.controls.name.value}
+                            onChangeText={(val) => this.updateInputState('name', val)}
+                            autoCorrect={false}
+                            valid={this.state.controls.name.valid}
+                            touched={this.state.controls.name.touch}
+                            placeholderTextColor="#5a6e65"
+                            textContentType='name'
                           />
-                      </Block>
 
-                      <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
-                          <Block>
-                            <Text gray2 style={{ marginBottom: 10 }}>Phone</Text>
-                          </Block>
-                        
-                          <DefaultInput 
-                              iconName='phone-android'
-                              placeholder='ex: +1029524141'
-                              value={this.state.controls.phone.value}
-                              onChangeText={(val) => this.updateInputState('phone', val)}
-                              autoCorrect={false}
-                              valid={this.state.controls.phone.valid}
-                              touched={this.state.controls.phone.touch}
-                              placeholderTextColor="#5a6e65"
-                          />
-                      </Block>
+                        </View>
 
-                      <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
-                          <Block>
-                            <Text gray2 style={{ marginBottom: 10 }}>Address</Text>
-                          </Block>
-                        
-                          <DefaultInput 
+                      </View>
+
+                      <View style={styles.item}>
+
+                          <Text medium black title>Address</Text>  
+                                
+                          <View style={{width: '70%'}}>
+                          
+                            <DefaultInput 
                               iconName='my-location'
-                              placeholder='ex: st 15 cairo egypt'
+                              placeholder='ex: st 15 cairo, egypt'
                               value={this.state.controls.address.value}
                               onChangeText={(val) => this.updateInputState('address', val)}
                               autoCorrect={false}
                               valid={this.state.controls.address.valid}
                               touched={this.state.controls.address.touch}
                               placeholderTextColor="#5a6e65"
-                          />
+                            />
+                          
+                          </View>
 
-                      </Block>
+                      </View>
 
-                      <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
-                          <Block>
-                            <Text gray2 style={{ marginBottom: 10 }}>Person</Text>
-                          </Block>
-                        
-                          <DefaultInput 
-                              iconName='person'
-                              placeholder="ex: Mo Helmi"
-                              value={this.state.controls.name.value}
-                              onChangeText={(val) => this.updateInputState('name', val)}
-                              autoCorrect={false}
-                              valid={this.state.controls.name.valid}
-                              touched={this.state.controls.name.touch}
-                              placeholderTextColor="#5a6e65"
-                              textContentType='name'
-                          />
-                      </Block>
+                      <View style={styles.item}>
 
-                      <Block row space="between" margin={[10, 0]} style={styles.inputRow}>
-                          <Block>
-                            <Text gray2 style={{ marginBottom: 10 }}>Person</Text>
-                          </Block>
-                        
-                          <DefaultInput 
-                              iconName='person'
-                              placeholder="ex: Mo Helmi"
-                              value={this.state.controls.name.value}
-                              onChangeText={(val) => this.updateInputState('name', val)}
-                              autoCorrect={false}
-                              valid={this.state.controls.name.valid}
-                              touched={this.state.controls.name.touch}
-                              placeholderTextColor="#5a6e65"
-                              textContentType='name'
-                          />
-                      </Block> 
+                          <Text medium black title>Phone</Text>  
+                          
+                          <View style={{width: '70%'}}>
+                          
+                              <DefaultInput 
+                                iconName='phone-android'
+                                placeholder='ex: +1029524141'
+                                value={this.state.controls.phone.value}
+                                onChangeText={(val) => this.updateInputState('phone', val)}
+                                autoCorrect={false}
+                                valid={this.state.controls.phone.valid}
+                                touched={this.state.controls.phone.touch}
+                                placeholderTextColor="#5a6e65"
+                              />  
+                          
+                          </View>
+
+                      </View>
+
+                      <View style={styles.item}>
+
+                          <Text medium black title>Birth Date</Text>      
+                         
+                          <View style={{width: '70%'}}>
+
+                            <DefaultInput 
+                                iconName='today'
+                                placeholder="ex: 25-05-1997"
+                                value={this.state.controls.birthDate.value}
+                                onChangeText={(val) => this.updateInputState('birthDate', val)}
+                                autoCorrect={false}
+                                valid={this.state.controls.birthDate.valid}
+                                touched={this.state.controls.birthDate.touch}
+                                placeholderTextColor="#5a6e65"                                
+                            />
+
+                          </View>
+                                
+                      </View>
+
+                      <View style={styles.item}>
+
+                        <Text medium black title>Gender</Text>      
+                         
+                        <View style={{width: '70%'}}>
+                            
+                            <Picker selectedValue={this.state.genderValueHolder} 
+                                    onValueChange={
+                                      (itemValue) => this.setState(prevState => {
+                                        return {
+                                          ...prevState,
+                                          genderValueHolder: itemValue
+                                        }
+                                      })
+                                    } 
+                            >
+                              <Picker.Item label="Male" value="Male"/>
+                              <Picker.Item label="Female" value="Female"/>
+                            </Picker>
+                       </View>   
                      
-                    </Block>
+                      </View> 
+
+                      <View style={styles.item}>
+                        
+                         <Text medium black title>Status</Text>      
+                         
+                         <View style={{width: '70%'}}>
+                          <Picker selectedValue={this.state.statusValueHolder} 
+                                  onValueChange={(itemValue) => this.setState( prevState => {
+                                    return {
+                                        ...prevState,
+                                        statusValueHolder: itemValue  
+                                    }
+                                    })
+                                  } 
+                          >
+                            <Picker.Item label="Single" value="Single"/>
+                            <Picker.Item label="Relationship" value="Relationship"/>
+                            <Picker.Item label="Engaged" value="Engaged"/>
+                            <Picker.Item label="Married" value="Married"/>
+                            <Picker.Item label="Separated" value="Separated"/>
+                          
+                          </Picker>
+                      
+                        </View>
+                      
+                      </View> 
+                      
+                    </View>
 
                     <Divider />
 
-                    <Block style={styles.toggles}>
+                    <View style={styles.toggels}>
                       
-                      <Block row center space="between" style={{ marginBottom: theme.sizes.base * 2 }}>
-                        <Text gray2>A</Text>
-                        <Switch
-                          value={this.state.notifications}
-                          onValueChange={value => this.setState({ A : value })}
-                        />
-                      </Block>
+                      <View style={styles.box}>
+                        
+                        <Text medium black title>Dibates</Text>
+                        
+                        <View style={{alignSelf: 'flex-end'}}>
+                          <Switch
+                            value={this.state.diabates}
+                            onValueChange={value => this.setState(prevState =>  {  
+                                return {
+                                  ...prevState, 
+                                  diabates : value
+                                }  
+                              })
+                            }
+                          /> 
+                        </View>
+                     
+                      </View>
                       
-                      <Block row center space="between" style={{ marginBottom: theme.sizes.base * 2 }}>
-                        <Text gray2>B</Text>
+                      <View style={styles.box}>
+                        
+                        <Text medium black title>Cancer</Text>
+                        
                         <Switch
-                          value={this.state.newsletter}
-                          onValueChange={value => this.setState({ B : value })}
+                          value={this.state.cancer}
+                          onValueChange={ value => this.setState(prevState =>  {  
+                              return {
+                                ...prevState, 
+                                cancer : value
+                              }  
+                            })
+                          }
                         />
-                      </Block>
 
-                      <Block row center space="between" style={{ marginBottom: theme.sizes.base * 2 }}>
-                        <Text gray2>C</Text>
+                      </View>
+
+                      <View style={styles.box}>
+                        
+                        <Text medium black title>Heart Disease</Text>
+                        
                         <Switch
-                          value={this.state.newsletter}
-                          onValueChange={value => this.setState({ C : value })}
+                          value={this.state.heartDisease}
+                          onValueChange={value => this.setState( prevState =>  {  
+                              return {
+                                ...prevState, 
+                                heartDisease : value
+                              }  
+                            })
+                          }
                         />
-                      </Block>
 
-                      <Block row center space="between" style={{ marginBottom: theme.sizes.base * 2 }}>
-                        <Text gray2>D</Text>
+                      </View>
+
+                      <View  style={styles.box}>
+                        
+                        <Text medium black title>Hepatitos C</Text>
+                        
                         <Switch
-                          value={this.state.newsletter}
-                          onValueChange={value => this.setState({ D : value })}
+                          value={this.state.hepatitosC}
+                          onValueChange={ value => this.setState( prevState =>  {  
+                              return {
+                                ...prevState, 
+                                hepatitosC : value
+                              }  
+                            })
+                          }
                         />
-                      </Block>
 
-                    </Block> 
+                      </View>
+
+                      <View  style={styles.box}>
+                        
+                        <Text medium black title>Hepatitos B</Text>
+                        
+                        <Switch
+                          value={this.state.hepatitosB}
+                          onValueChange={ value => this.setState( prevState =>  {  
+                              return {
+                                ...prevState, 
+                                hepatitosB : value
+                              }  
+                            })
+                          }
+                        />
+
+                      </View>
+
+                      <View  style={styles.box}>
+                        
+                        <Text medium black title>AIDS</Text>
+                        
+                        <Switch
+                          value={this.state.AIDS}
+                          onValueChange={ value => this.setState( prevState =>  {  
+                              return {
+                                ...prevState, 
+                                AIDS : value
+                              }  
+                            })
+                          }
+                        />
+
+                      </View>
+
+                    </View> 
                           
-                    <ButtonD gradient
+                    
+                    <View style={styles.bottom}>
+
+                        <CustomButton 
                             onPress={this.addPersonHandler} 
-                            
+                            moreStyle={{width: 280, height: 55}} 
+                            bgColor="#f6b810" 
+                            size={22} 
                             disabled={ 
-                              !this.state.controls.email.valid &&
-                              !this.state.controls.name.valid &&
-                              !this.state.controls.phone.valid &&
-                              !this.state.controls.birthDate.valid &&
-                              !this.state.controls.address.valid &&
-                              !this.state.controls.imagePicked.valid &&
-                              !this.state.controls.fingerprintPicked
+                              !this.state.controls.name.valid ||
+                              !this.state.controls.phone.valid ||
+                              !this.state.controls.birthDate.valid ||
+                              !this.state.controls.address.valid ||
+                              !this.state.controls.image.valid &&
+                              !this.state.controls.fingerprint.valid &&
+                              !this.state.controls.record.valid
                             }
                         >
-                            {loading ?
-                                <ActivityIndicator size="small" color="white" /> :
-                                <Text bold black center>Add Person</Text>
-                            }
-                    </ButtonD>        
+                          Add Person
+                        </CustomButton>
                 
-                </ScrollView>
-          
-            </Block>   
+                    </View>        
+                
+                </ScrollView>  
           
           </KeyboardAvoidingView>
         ); 
@@ -316,20 +457,51 @@ class AddScreen extends Component {
 }
 
 const styles = StyleSheet.create({
-    addPerson: {
-      flex: 1,
-      justifyContent: 'center',
-    },
-    inputs: {
-      marginTop: theme.sizes.base * 0.7,
-      paddingHorizontal: theme.sizes.base * 2,
-    },
-    inputRow: {
-      alignItems: 'flex-end'
-    },
-    toggles: {
-      paddingHorizontal: theme.sizes.base * 2,
-    },
+  container:{
+    flex: 1,
+    alignItems: 'center',
+    padding: 10,
+    backgroundColor: '#faf8fb',
+  },       
+  top: {
+    justifyContent: 'center',
+    alignItems: 'center', 
+    marginTop: 20,
+  },
+  box: {
+    alignItems: 'center',
+  },
+  info: {
+    marginTop: 10,
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  item: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+    justifyContent: 'space-between',
+  },
+  toggels: {
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  box: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 15,
+    justifyContent: 'space-between',
+  },
+  bottom: {
+    width: '100%',
+    marginTop: 30,
+    marginBottom: 20,
+    alignItems: 'center',
+  }
 });
 
 export default AddScreen;

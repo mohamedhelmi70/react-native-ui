@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet , View} from 'react-navtive';
+import { StyleSheet , View} from 'react-native';
 import { AppLoading, Font, Icon } from 'expo';
 import AppNavigator from './src/navigation/AppNavigator';
 

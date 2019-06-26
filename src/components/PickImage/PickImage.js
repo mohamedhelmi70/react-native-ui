@@ -1,47 +1,67 @@
 import React, { Component } from 'react';
-import {View, StyleSheet, Image, Text} from 'react-native';
-import { ImagePicker } from 'expo';
+import { StyleSheet, View , Image} from 'react-native';
+import { Permissions, ImagePicker } from 'expo';
 
+import Icon from '../TabBarIcon/TabBarIcon';
 import CustomButton from '../UI/CustomButton/CustomButton';
-
 class PickImage extends Component {
-    
-    state = {
-        pickedImage: null
+    constructor (props) {
+        super(props);
+        this.state = {
+        pickedImaged: null
+       }
     }
-     
-    takeImageHandler = async () => {
-      const result = await ImagePicker.launchCameraAsync(
-          {allowsEditing: true,
-            quality: 1, 
-            aspect: [4,3]   
-          });
-      if(!result.cancelled) {
-          this.setState({
-            pickedImage: result.uri
-          });
-          this.props.onImagePicked({uri: result.uri, base64: result.data});
-      }    
+
+    askPermissionsAsync = async () => {
+        await Permissions.askAsync(Permissions.CAMERA);
+        await Permissions.askAsync(Permissions.CAMERA_ROLL);
     };
-
-    render () {
-
-        
-        const image = (<Image source={{uri: this.state.pickedImage}} style={styles.previewImage}/>);
-        const text = (<Text style={styles.txt}> { this.props.text } </Text>); 
+    
+    useLibraryHandler = async () => {
+        await this.askPermissionsAsync();
+        let result = await ImagePicker.launchImageLibraryAsync({
+          allowsEditing: true,
+          aspect: [4, 3],
+          base64: true,
+        });
+        this.setState({pickedImaged: result.uri });
+        this.props.onImagePicked({uri: result.uri, base64: result.data});
+    };
+    
+    useCameraHandler = async () => {
+        await this.askPermissionsAsync();
+        let result = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+            base64: true,
+        });
+        this.setState({ pickedImaged: result.uri });
+        this.props.onImagePicked({uri: result.uri, base64: result.data});
+    };
+    
+    
+    
+    
+    render () { 
         
         return (
             <View style={styles.container}>
 
-                <View style={[styles.placeholder, {width: this.props.wth , hight: this.props.hht} ]}>
+                <View style={[styles.placeholder, {height: this.props.h, width: this.props.w}]}>
                     
-                    {this.state.pickedImage === null ?  text : image }  
+                    <Image source={{uri: this.state.pickedImaged}} style={styles.previewImage}/>
                     
                 </View>
             
                 <View style={styles.button}>
             
-                    <CustomButton onPress={this.takeImageHandler} color="#f6b810">capture Image</CustomButton>
+                    <CustomButton onPress={this.useCameraHandler} color="#070606"> 
+                        <Icon name='md-camera' size={18} />
+                    </CustomButton>
+                    <View style={{marginRight: 20}} />  
+                    <CustomButton onPress={this.useLibraryHandler} color="#070606">
+                        <Icon name='md-cloud-upload' size={18} />
+                    </CustomButton>
             
                 </View>
             
@@ -66,11 +86,12 @@ const styles = StyleSheet.create({
        height: "100%"   
     },
     button: {
-        margin: 8
-    },
-    txt: {
-        justifyContent: 'center',
-        fontSize: 16, 
+        marginTop: 8,
+        marginBottom: 8,
+        flexDirection: 'row', 
+        justifyContent: 'flex-start',
+        alignItems: 'stretch',
+
     }
 });
 

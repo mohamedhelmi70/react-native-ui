@@ -22,7 +22,7 @@ class DetailsScreen extends React.Component {
 
     static navigationOptions = {
         title: "Details",
-        headerRight: <LogoTitle />,
+        headerRight: <LogoTitle ur={null} />,
     };
 
     static propTypes = {

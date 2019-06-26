@@ -1,5 +1,7 @@
 import React from 'react';
 import { ActivityIndicator, StatusBar, View} from 'react-native';
+import Firebase from '../../services/Firebase';
+
 class AuthLoadingScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -7,20 +9,13 @@ class AuthLoadingScreen extends React.Component {
       isAuthenticationReady: false,
       isAuthenticated: false,
     }
-    
-    Firebase.auth().onAuthStateChanged(this.onAuthStateChanged);
-
-    this.startAppHandler();
   }
-
-  onAuthStateChanged = (user) => {
-    this.setState({isAuthenticationReady: true});
-    this.setState({isAuthenticated: !!user});
+  
+  componentDidMount() {
+    Firebase.auth().onAuthStateChanged(user => {
+      this.props.navigation.navigate(user ? 'Tab' : 'Auth')
+    })
   }
-
-  startAppHandler = () => {
-    this.state.isAuthenticated ? this.props.navigation.navigate('Tab')  : this.props.navigation.navigate('Auth');
-  };
   
   render() {
     return (

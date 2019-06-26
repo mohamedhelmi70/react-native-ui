@@ -13,6 +13,7 @@ import CriminalRecordScreen from '../screens/MainTab/CriminalRecordScreen/Crimin
 import ForbiddenTravellerScreen from '../screens/MainTab/ForbiddenTraveller/ForbiddenTraveller';
 import Details from '../screens/MainTab/DetailsScreen/DetailsScreen';
 import ChangePasswordScreen from '../screens/MainTab/ChangePasswordScreen/ChangePasswordScreen';
+import PersonsScreen from '../screens/MainTab/PersonsScreen/PersonsScreen';
 import AboutScreen from '../screens/MainTab/AboutScreen/AboutScreen';
 
 const HomeStack = createStackNavigator({
@@ -20,14 +21,16 @@ const HomeStack = createStackNavigator({
   criminalRecord: CriminalRecordScreen,
   identity: IdentityScreen,
   forbiddenTraveller: ForbiddenTravellerScreen,
-  details: Details
+  details: Details,
+  profile: ProfileScreen,
+  persons: PersonsScreen,
 });
 
 HomeStack.navigationOptions = {
   tabBarLabel: 'Home',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
-      focused={focused}
+      focused={ focused }
       name={ Platform.OS === 'ios' ? 'ios-home' : 'md-home' }
     />
   ),
@@ -38,6 +41,7 @@ HomeStack.navigationOptions = {
 
 const AddStack = createStackNavigator({
   Add : AddScreen,
+  profile: ProfileScreen
 });
 
 AddStack.navigationOptions = {
@@ -54,17 +58,17 @@ AddStack.navigationOptions = {
   }
 };
 
-const IdentityStack = createStackNavigator({
-  identity: IdentityScreen,
-  details: Details,
+const PersonsStack = createStackNavigator({
+  persons: PersonsScreen,
+  profile: ProfileScreen
 });
 
-IdentityStack.navigationOptions = {
-  tabBarLabel: 'Check',
+PerosnsStack.navigationOptions = {
+  tabBarLabel: 'Persons',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? 'ios-search' : 'md-search'}
+      name={Platform.OS === 'ios' ? 'ios-persons' : 'md-persons'}
     />
   ), 
   headerTitleStyle: {
@@ -97,7 +101,7 @@ export default createBottomTabNavigator(
   {
     HomeStack,
     AddStack,
-    IdentityStack,
+    PersonsStack,
     ProfileStack
   },
   {

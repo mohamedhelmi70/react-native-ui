@@ -1,18 +1,18 @@
 import React from 'react';
 import { 
+  View,
   StyleSheet,
-  ActivityIndicator, 
   KeyboardAvoidingView, 
   Keyboard, 
   TouchableWithoutFeedback 
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { NavigationActions } from 'react-navigation';
-import * as  theme  from '../../../constants/Theme/Theme';
-import { ButtonD, Block, Text} from '../../../components/UI/index';
 import Firebase from '../../../services/Firebase';
 
 import DefaultInput from '../../../components/UI/DefaultInput/DefaultInput';
+import CustomButton from '../../../components/UI/CustomButton/CustomButton';
+import HeadingText from '../../../components/UI/HeadingText/HeadingText';
+import MainText from '../../../components/UI/mainText/mainText';
 import Button from '../../../components/UI/Button/Button';
 import Logo from '../../../components/UI/Logo/Logo';
 import validate from '../../../utility/validation';
@@ -79,19 +79,11 @@ class SignInScreen extends React.Component {
     };
 
     startSignupScreen = () => {
-      const navActions = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({routeName: "signup"})]
-      });
-      this.props.navigation.dispatch(navActions);
+      this.props.navigation.navigate('signup');
     };
 
     startForgetScreen = () => {
-      const navActions = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({routeName: "forgetpassword"})]
-      });
-      this.props.navigation.dispatch(navActions);
+      this.props.navigation.navigate('forgetpassword');
     }
 
     updateInputState = (key, value) => {
@@ -135,24 +127,23 @@ class SignInScreen extends React.Component {
       
         <KeyboardAvoidingView style={styles.container} behavior="padding">
           
-          <Block padding={[0, theme.sizes.base * 2]}>
               
-              <Block left margin={[30 , 0]}>
+          <View style={styles.viewflexStart}>
+
+            <Logo />
+
+            <HeadingText size={35} fontFamily='Fjalla-one'>Fingerprint Makes Life Easier</HeadingText>
+          
+          </View>
+              
+          
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
+            <View style={styles.viewCenter}>  
+
                   
-                  <Logo />
-
-                  <Text h2 semibold black>Fingerprint Makes Life Easier</Text>
-        
-              </Block>
-                    
-                
-              <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-
-                <Block center middle> 
-
+                <View style={styles.inputContainer}>
                         
-                      <Block row space="between" margin={[5, 0]} style={styles.inputContainer}>
-                              
                         <DefaultInput 
                           iconName='email'
                           placeholder="Email"
@@ -167,9 +158,9 @@ class SignInScreen extends React.Component {
                           textContentType='emailAddress'
                         />
 
-                      </Block>
-                          
-                      <Block row space="between" margin={[5, 0]} style={styles.inputContainer}>
+                </View>
+                    
+                <View style={styles.inputContainer}>
                         
                         <DefaultInput 
                           iconName='remove-red-eye'
@@ -184,56 +175,50 @@ class SignInScreen extends React.Component {
                           textContentType='password'
                         />
 
-                      </Block>
+                </View>
 
-                      <Block left row>
+                <View style={styles.forgetView}>
 
-                        <Button 
-                          onPress={this.startForgetScreen} 
-                          color="#000" 
-                          size={14}
-                          bBColor="#000"
-                          bBWidth={1}
-                          bStyle="solid"
-                          fWeight='bold'
-                          marginL={5}
-                        >Forget Password</Button>
-                      
-                      </Block>
-
-                      <Block center margin={[20, 0, 0, 0]}>
-
-                        <ButtonD gradient
-                          onPress={this.signInHandler} 
-                          disabled={ 
-                            !this.state.controls.email.valid ||
-                            !this.state.controls.password.valid 
-                          }  
-                        >
-                          {loading ?
-                            <ActivityIndicator size="small" color="white" /> :
-                            <Text bold black center>Log In</Text>
-                          }
-                        
-                        </ButtonD>  
-                        
-                        <Block row space="between" margin={[10 , 0]}>
-                          
-                          <Text meduim> Don’t have an account ? </Text> 
-                            
-                          <Text onPress={this.startSignupScreen} meduim tintColor >Sign up</Text>  
-                        
-                        </Block> 
-                        
-                      </Block> 
-
-                </Block>
+                  <Button 
+                    onPress={this.startForgetScreen} 
+                    color="#000" 
+                    size={14}
+                    bBColor="#000"
+                    bBWidth={1}
+                    bStyle="solid"
+                    fWeight='bold'
+                    marginL={5}
+                  >Forget Password</Button>
                 
-            </TouchableWithoutFeedback>                                
-          
-          </Block>
+                </View>
 
-        </KeyboardAvoidingView>
+                <View style={styles.bottom}>
+                        
+                        <CustomButton 
+                            onPress={this.signInHandler} bgColor="#f6b810" 
+                            size={22}
+                            width={320}
+                            disabled={ 
+                              !this.state.controls.email.valid ||
+                              !this.state.controls.password.valid 
+                            }  
+                        >Login</CustomButton> 
+                        
+                        <View style={styles.signupcontainer}>
+                          
+                            <MainText>Don’t have an account?</MainText> 
+                              
+                            <Button onPress={this.startSignupScreen} color="#f6b810" size={16} fWeight='bold' marginL={5} >Sign up</Button>  
+                        
+                        </View> 
+                  
+                  </View> 
+
+              </View>
+          
+          </TouchableWithoutFeedback>                                
+        
+         </KeyboardAvoidingView>
       );
     }
   }
@@ -242,9 +227,33 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#faf8fb',
+    justifyContent: 'center',     
+    padding: 8,
+  },
+  viewflexStart: {
+    alignItems: 'flex-start',
+    marginBottom: 80,
+    marginLeft: 20,
+  },
+  viewCenter: {
+    alignItems: 'center'
   },
   inputContainer: {
     width: "80%",
+  },
+  forgetView: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    width: '80%',
+  },
+  bottom: {
+    alignItems: 'center',
+    marginTop: 40
+  },
+  signupcontainer: {
+    flexDirection: 'row', 
+    justifyContent: 'center',
+    alignItems: 'baseline',
   },
 });
 

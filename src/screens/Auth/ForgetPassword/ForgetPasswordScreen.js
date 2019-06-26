@@ -2,25 +2,23 @@ import React, { Component } from 'react';
 import { 
   StyleSheet, 
   KeyboardAvoidingView,
-  ActivityIndicator 
+  View
 } from 'react-native';
 import PropTypes from 'prop-types';
-import { NavigationActions } from 'react-navigation';
-import * as  theme  from '../../../constants/Theme/Theme';
-import { ButtonD, Block, Text} from '../../../components/UI/index';
 import Firebase from '../../../services/Firebase';
 
 import DefaultInput from '../../../components/UI/DefaultInput/DefaultInput';
+import CustomButton from '../../../components/UI/CustomButton/CustomButton';
 import Logo from '../../../components/UI/Logo/Logo';
+import HeadingText from '../../../components/UI/HeadingText/HeadingText';
 import validate from '../../../utility/validation';
-import { ButtonD, Text,  } from '../../../components/UI/index';
 
 class ForgetPassword extends Component {
      
     constructor(props) {
       super(props);
       this.state = {
-          loading,
+          loading: false,
           controls: {
             email: {
               value: "",
@@ -47,10 +45,8 @@ class ForgetPassword extends Component {
       const email = this.state.controls.email.value;
       this.setState({loading : true});
       await Firebase.auth().sendPasswordResetEmail(email)
-          .then( () =>  {
-            this.setState({loading : false});
-            alert('Please check your email...');
-            this.props.navigation.navigate('confirmPass');
+          .then( () => {
+            alert('Please check your email...')
           })
           .catch(error => {
             if (error.message !== null) {
@@ -63,12 +59,7 @@ class ForgetPassword extends Component {
     }
 
     backButtonHandler = () => {
-      const navActions = NavigationActions.reset({
-        index: 0,
-        actions: [NavigationActions.navigate({routeName: "login"})]
-      });
-      this.props.navigation.dispatch(navActions);
-      //this.props.navigation.navigate('login');
+      this.props.navigation.navigate('login');
     }
 
     updateInputState = (key, value) => {
@@ -92,58 +83,60 @@ class ForgetPassword extends Component {
   
     render() {
 
-        return (
-          <KeyboardAvoidingView style={styles.container} behavior="padding">
+      return (
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
+
+            <View style={styles.viewflexStart}>
+
+              <Logo />
+
+              <HeadingText size={30} fontFamily='Fjalla-one'>Fingerprint Makes Life Easier</HeadingText>
+
+            </View>
+          
+            <View style={styles.viewCenter}>        
+             
+                      <View style={styles.inputContainer}>
+                          
+                          <DefaultInput 
+                              iconName='email'
+                              placeholder="Email"
+                              value={this.state.controls.email.value}
+                              onChangeText={(val) => this.updateInputState("email", val)}
+                              valid={this.state.controls.email.valid}
+                              touched={this.state.controls.email.touched}
+                              autoCapitalize='none'
+                              autoCorrect={false}
+                              placeholderTextColor="#5a6e65"
+                              keyboardType="email-address"
+                              textContentType='emailAddress'
+                          />
+
+                      </View>
+                  
+                    <View style={styles.bottom}>
+
+                        <CustomButton 
+                            onPress={this.resetPasswordHandler} 
+                            bgColor="#f6b810" 
+                            size={20}
+                            width={210}
+                            disabled={ !this.state.controls.email.valid }  
+                        >Reset Password</CustomButton>
+                        <View style={{padding: 2}}/> 
+                        <CustomButton 
+                            onPress={this.backButtonHandler} 
+                            bgColor="#f6b810"
+                            width={100} 
+                            size={20}
+                        >Cancel</CustomButton>
+
+                    </View>               
+          </View>  
        
-            <Block padding={[0, theme.sizes.base * 2]}>
-
-              <Block left margin={[25, 0]}>
-
-                <Logo />
-
-                <Text gray normal>Fingerprint Makes Life Easier</Text>
-
-              </Block>
-            
-              <Block center middle>        
-               
-                <Block style={styles.inputContainer}>
-                    
-                  <DefaultInput 
-                      iconName='email'
-                      placeholder="Email"
-                      value={this.state.controls.email.value}
-                      onChangeText={(val) => this.updateInputState("email", val)}
-                      valid={this.state.controls.email.valid}
-                      touched={this.state.controls.email.touched}
-                      autoCapitalize='none'
-                      autoCorrect={false}
-                      placeholderTextColor="#5a6e65"
-                      keyboardType="email-address"
-                      textContentType='emailAddress'
-                  />
-
-                </Block>
-                    
-                <Block row space="between" margin={[20, 0]}>
-
-                    <ButtonD gradient
-                      onPress={this.resetPasswordHandler} 
-                      disabled={ 
-                        !this.state.controls.email.valid
-                      }  
-                    >
-                      {loading ? <ActivityIndicator size="small" color="black" /> : <Text bold black center>Reset Password</Text> }
-                    </ButtonD>
-
-                    <ButtonD gradient onPress={this.backButtonHandler} > Cancel </ButtonD>
-
-                </Block>               
-              </Block>
-            </Block>          
-          </KeyboardAvoidingView>
-        );
-    };
+        </KeyboardAvoidingView>
+      );
+  };
 
 }
 
@@ -151,10 +144,26 @@ const styles =  StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#faf8fb',
+    justifyContent: 'center',     
+    padding: 8,
+  },
+  viewflexStart: {
+    alignItems: 'flex-start',
+    marginBottom: 80,
+    marginLeft: 20,
+  },
+  viewCenter: {
+    alignItems: 'center',
   },
   inputContainer: {
     width: "80%",
   },
+  bottom: {
+    marginTop: 30,
+    flexDirection: 'row', 
+    justifyContent: 'flex-start',
+    alignItems: 'stretch',
+  }
 });
 
 export default ForgetPassword;

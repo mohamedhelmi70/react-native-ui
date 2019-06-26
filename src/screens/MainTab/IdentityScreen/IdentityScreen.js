@@ -1,55 +1,46 @@
 import React, { Component } from 'react';
-import { StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import PropTypes from 'prop-types';
-import * as  theme  from '../../../constants/Theme/Theme';
 
+import CustomButton from '../../../components/UI/CustomButton/CustomButton';
 import LogoTitle from '../../../components/UI/LogoTitle/LogoTitle';
 import PickImage from '../../../components/PickImage/PickImage';
-import PicKRecord from '../../../components/PickRecord/PickRecord';
-import { ButtonD , Block, Text } from '../../../components/UI/index';
+import mainText from '../../../components/UI/mainText/mainText';
+import HeadingText from '../../../components/UI/HeadingText/HeadingText';
 
 class IdentityScreen extends Component {
     
     constructor(props) {
         super(props);
         this.state = {
-            loading: false,
-            active: 'Fingerprint',
-            Fingerprint: false,
-            Image: false,
-            Record: false,
             controls: {
-                imagePicked: {
+                fingerprint: {
                     value: null,
                     valid: false
                 },
-                fingerprintPicked: {
+                image: {
                     value: null,
                     valid: false
-                },
-                recordPicked: {
-                    value: null,
-                    valid: false
-                },
+                }
             }
         };
     };
 
     static navigationOptions = {
         title: "Identity",
-        headerRight: <LogoTitle />,
+        headerRight: <LogoTitle ur={null} />,
     };
 
     static propTypes = {
         navigation: PropTypes.object,
     };
 
-    pickImageHandler = image => {
+    handleFace = image => {
         this.setState(prevState => {
             return {
                controls: {
                     ...prevState.controls,
-                    imagePicked: {
+                    image: {
                         value: image,
                         valid: true
                     }
@@ -58,12 +49,12 @@ class IdentityScreen extends Component {
         });
     };
 
-    pickFingerprintHandler = fingerprint => {
+    handleFingerprint = fingerprint => {
         this.setState(prevState => {
             return {
                controls: {
                     ...prevState.controls,
-                    fingerprintPicked: {
+                    fingerprint: {
                         value: fingerprint,
                         valid: true
                     }
@@ -73,143 +64,89 @@ class IdentityScreen extends Component {
     };
      
     checkIdentityHandler = async () => {
-        this.props.navigation.navigate('details');
-    }
-
-    renderTab = tab => {
-        const { active } = this.state;
-        const isActive = active === tab;
-    
-        return (
-          <TouchableOpacity
-            key={`tab-${tab}`}
-            onPress={() => this.handleTab(tab)}
-            style={[
-              styles.tab,
-              isActive ? styles.active : null
-            ]}
-          >
-            <Text size={16} medium gray={!isActive} primary={isActive}>
-              {tab}
-            </Text>
-          </TouchableOpacity>
-        );
-    }
-
-    handleTab = tab => {
-        if ( tab === 'Fingerprint' ){
-           this.setState(prevState => {
-                return {
-                   ...prevState,
-                   fingerprint: true, 
-                   image: false,
-                   record: false,
-                }
-           })
-        } else if (tab === 'Take Selfie' ) {
-            this.setState(prevState => {
-                return {
-                   ...prevState,
-                   fingerprint: false, 
-                   image: true,
-                   record: false,
-                }
-           })
-        } else {
-            this.setState(prevState => {
-                return {
-                   ...prevState,
-                   fingerprint: false, 
-                   image: false,
-                   record: true, 
-                }
-           })
+        const today = new Date();
+        const time = today.getHours() + ":" + today.getMinutes();
+        const info = {
+            name: 'Mohamed Helmy Abdel Aziz',
+            status: 'valid',
+            birthDate: '25-05-1997',
+            time: time,
         }
+
+        this.props.navigation.navigate('details' , info);
     }
-    
+
     render() {
 
-        const tabs = ['Fingerprint', 'Take Selfie', 'Pick Record']; 
-        
-        const Fingerprint = null;
-        if (fingerprint) {
-            Fingerprint = (
-                <Block center shadow>
-                    <PickImage text="Capture image of your fingerprint" wth={'80%'} hht={150} onImagePicked={this.pickFingerprintHandler} />
-                </Block>  
-            );
-        }
-        const Image = null;
-        if (image) {
-            Image =  (
-                <Block center shadow>
-                    <PickImage text="Take Selfie" wth={'60%'} hht={160} onImagePicked={this.pickImageHandler} />
-                </Block>
-            );    
-        }
-        const record = null;
-        if (record){
-            Record =  (
-                <Block center shadow>
-                    <PicKRecord />
-                </Block> 
-            );
-        }
-        
         return (
             
-            <Block>
+            <View style={styles.container}>
 
-                <Block flex={false} row style={styles.tabs}>
-                    {tabs.map(tab => this.renderTab(tab))}
-                </Block>
-                 
-                <Block middle style={styles.mid}>
-                     
-                        { Fingerprint }
-                        { Image }
-                        { Record }
+                <ScrollView showsVerticalScrollIndicator={false}>
+                   
+                    <View style={styles.block}>                
                         
-                        <ButtonD gradient
-                            onPress={() => this.checkIdentityHandler} 
+                        <View style={styles.box}>
+
+                             <HeadingText size={25}> Pick Fingrprint </HeadingText>
+
+                             <mainText>We use your selfie to check your identity</mainText> 
+                            
+                             <PickImage text={'Fingerprint'} h={150} w={'80%'} onImagePicked={this.handleFingerprint} />
+ 
+                        </View> 
+                        
+                        <View style={styles.box}>
+
+                            <HeadingText size={25} > Take Selfie </HeadingText>
+                            
+                            <mainText>We use your selfie to check your identity</mainText>  
+                            
+                            <mainText>Good Lighting</mainText>
+
+                            <mainText>Look straight</mainText> 
+
+                            <PickImage text={'Face'} h={200} w={'55%'}  onImagePicked={this.handleFace} />
+                        
+                        </View>
+                        
+                        <CustomButton
+                            moreStyle={{width:280, height: 55, marginTop: 60, marginBottom: 30}}
+                            bgColor="#f6b810" 
+                            size={22}
+                            onPress={this.checkIdentityHandler} 
                             disabled={
-                                !this.state.controls.fingerprintPicked.valid &&
-                                !this.state.controls.imagePicked.valid &&
-                                !this.state.controls.recordPicked.valid 
+                                !this.state.controls.fingerprint.valid &&
+                                !this.state.controls.image.valid 
                             }
                         >
-                            {loading ?
-                                <ActivityIndicator size="small" color="white" /> :
-                                <Text bold black center>Check Identity</Text>
-                            }
-                        </ButtonD>           
+                            Check Identity
+                        </CustomButton>     
+                            
+                    </View>   
+                
+                </ScrollView>
 
-                </Block>
-     
-            </Block>
+            </View>
        );
     }
 }
 
 const styles = StyleSheet.create({
-    tabs: {
-        borderBottomColor: theme.colors.gray2,
-        borderBottomWidth: StyleSheet.hairlineWidth,
-        marginVertical: theme.sizes.base,
-        marginHorizontal: theme.sizes.base * 2,
+    container: {
+        flex: 1,
+        backgroundColor: '#faf8fb',
     },
-    tab: {
-        marginRight: theme.sizes.base * 2,
-        paddingBottom: theme.sizes.base
+    block: {
+        flex:1,
+        alignItems: 'center',
+        padding: 20,
+        marginTop: 20,
     },
-    active: {
-        borderBottomColor: theme.colors.tintColor,
-        borderBottomWidth: 3,
-    },
-    mid: {
-        paddingHorizontal: theme.sizes.base * 2,
-        marginBottom: theme.sizes.base * 3.5,
-    },
+    box: {
+        alignItems: 'center',
+        marginTop: 10
+    }
 });
 
 export default IdentityScreen;
